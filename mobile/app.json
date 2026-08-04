@@ -1,0 +1,70 @@
+{
+  "expo": {
+    "name": "Recensement de Population",
+    "slug": "census-mobile",
+    "scheme": "census",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F5F7FA"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "mg.recensement.mobile",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "La localisation permet d’enregistrer les coordonnées des habitations.",
+        "NSCameraUsageDescription": "La caméra permet de photographier les habitations et les citoyens, puis de scanner les QR codes.",
+        "NSPhotoLibraryUsageDescription": "La photothèque permet d’importer une photo d’habitation ou de citoyen."
+      }
+    },
+    "android": {
+      "package": "mg.recensement.mobile",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA"
+      ],
+      "adaptiveIcon": {
+        "backgroundColor": "#EFF6FF",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Autoriser l’application à utiliser la caméra."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Autoriser l’application à enregistrer la localisation des habitations."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Autoriser l’application à sélectionner des photos d’habitation ou de citoyen.",
+          "cameraPermission": "Autoriser l’application à prendre une photo d’habitation ou de citoyen."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "apiUrl": "http://10.0.2.2:5001/api/v1"
+    }
+  }
+}

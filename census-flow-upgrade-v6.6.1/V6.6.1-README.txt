@@ -1,0 +1,5 @@
+Census Flow V6.6.1
+
+Ce correctif contient le meme contenu fonctionnel que V6.6.
+Il corrige uniquement l'encodage du script PowerShell d'installation
+pour Windows PowerShell 5.1.

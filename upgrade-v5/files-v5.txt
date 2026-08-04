@@ -1,0 +1,13 @@
+V5-CHANGELOG.md
+web/src/components/common/CitizenPhotoCapture.tsx
+web/src/pages/PersonsPage.tsx
+web/src/i18n/translations.ts
+web/src/styles/tokens.css
+web/src/styles/base.css
+web/src/styles/components.css
+web/src/styles/layout.css
+web/src/styles/pages.css
+mobile/app/households/new.tsx
+mobile/src/preferences/PreferencesContext.tsx
+mobile/src/styles/theme.ts
+mobile/app.json

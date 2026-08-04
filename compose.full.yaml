@@ -1,0 +1,61 @@
+name: census-platform-full
+
+services:
+  database:
+    image: postgis/postgis:18-3.6
+    container_name: census-database
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-census_db}
+      POSTGRES_USER: ${POSTGRES_USER:-census_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - census-database-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-census_user} -d ${POSTGRES_DB:-census_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  api:
+    build:
+      context: ./back
+    container_name: census-api
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__CensusDatabase: Host=database;Port=5432;Database=${POSTGRES_DB:-census_db};Username=${POSTGRES_USER:-census_user};Password=${POSTGRES_PASSWORD}
+      Jwt__Issuer: Census.Api
+      Jwt__Audience: Census.Clients
+      Jwt__SigningKeyBase64: ${JWT_SIGNING_KEY_BASE64}
+      Jwt__AccessTokenLifetimeMinutes: 15
+      BootstrapAdmin__FirstName: Administrateur
+      BootstrapAdmin__LastName: Système
+      BootstrapAdmin__Email: ${BOOTSTRAP_ADMIN_EMAIL}
+      BootstrapAdmin__Password: ${BOOTSTRAP_ADMIN_PASSWORD}
+      Cors__AllowedOrigins__0: http://localhost:8080
+    ports:
+      - "5001:8080"
+
+  web:
+    build:
+      context: ./web
+      args:
+        VITE_API_URL: http://localhost:5001/api/v1
+    container_name: census-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
+
+volumes:
+  census-database-data:
+    name: census-database-data

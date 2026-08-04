@@ -1,0 +1,131 @@
+:root {
+  --primary-50: #f3efff;
+  --primary-100: #e7defe;
+  --primary-200: #d1c0ff;
+  --primary-300: #b79cff;
+  --primary-500: #7c5cff;
+  --primary-600: #6945ef;
+  --primary-700: #5332c4;
+
+  --secondary-50: #fff0f5;
+  --secondary-100: #ffdce8;
+  --secondary-200: #ffb8d0;
+  --secondary-500: #ff5d8f;
+  --secondary-600: #e94778;
+  --secondary-700: #bb315d;
+
+  --accent-50: #eafff9;
+  --accent-100: #c9faef;
+  --accent-200: #92f0df;
+  --accent-500: #19c8ad;
+  --accent-600: #0ea48e;
+  --accent-700: #087967;
+
+  --navy-800: #12314a;
+  --navy-900: #0a2136;
+  --navy-950: #051420;
+
+  --success-50: #ebfff8;
+  --success-100: #cdfaec;
+  --success-500: #28c797;
+  --success-600: #169f76;
+  --warning-50: #fff8e6;
+  --warning-100: #ffedb8;
+  --warning-500: #f4b942;
+  --warning-600: #d49215;
+  --danger-50: #fff0f1;
+  --danger-100: #ffd7dc;
+  --danger-500: #ff6678;
+  --danger-600: #dc3f55;
+  --purple-500: #9a6dff;
+  --orange-500: #f4b942;
+
+  --gray-25: #fcfbff;
+  --gray-50: #f6f4fb;
+  --gray-100: #efebf6;
+  --gray-200: #ded7eb;
+  --gray-300: #c7bdd8;
+  --gray-400: #9f93b2;
+  --gray-500: #746986;
+  --gray-600: #584e6a;
+  --gray-700: #3d354d;
+  --gray-800: #271f36;
+  --gray-900: #171124;
+  --white: #ffffff;
+
+  --surface: #ffffff;
+  --surface-soft: #f9f7fd;
+  --surface-raised: rgba(255, 255, 255, .92);
+  --text: #171124;
+  --text-muted: #746986;
+  --border: #ded7eb;
+
+  --primary: var(--primary-500);
+  --primary-soft: var(--primary-50);
+  --secondary: var(--secondary-500);
+  --secondary-soft: var(--secondary-50);
+  --accent: var(--accent-500);
+  --accent-soft: var(--accent-50);
+
+  --gradient-primary: linear-gradient(135deg, #7c5cff 0%, #9a6dff 42%, #ff5d8f 100%);
+  --gradient-accent: linear-gradient(135deg, #19c8ad 0%, #42b8f5 100%);
+  --gradient-hero: linear-gradient(120deg, rgba(124, 92, 255, .24), rgba(255, 93, 143, .16) 48%, rgba(25, 200, 173, .18));
+  --gradient-night: linear-gradient(155deg, #051420 0%, #0a2136 48%, #25164a 100%);
+
+  --shadow-sm: 0 6px 18px rgba(33, 20, 59, .07);
+  --shadow-md: 0 22px 54px rgba(65, 42, 110, .13);
+  --shadow-lg: 0 38px 100px rgba(17, 11, 32, .22);
+  --shadow-primary: 0 18px 42px rgba(124, 92, 255, .27);
+
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 30px;
+  --sidebar-width: 286px;
+  --topbar-height: 78px;
+  --font-sans: Inter, Manrope, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+:root[data-theme='dark'] {
+  --gray-25: #04111c;
+  --gray-50: #061521;
+  --gray-100: #0b2030;
+  --gray-200: #183346;
+  --gray-300: #29485d;
+  --gray-400: #668198;
+  --gray-500: #94a9bc;
+  --gray-600: #b6c6d5;
+  --gray-700: #d1dce7;
+  --gray-800: #e8eef5;
+  --gray-900: #f8fbff;
+  --white: #0b2030;
+  --surface: #0b2030;
+  --surface-soft: #081a29;
+  --surface-raised: rgba(11, 32, 48, .94);
+  --text: #f8fbff;
+  --text-muted: #94a9bc;
+  --border: #183346;
+  --primary-50: #1d1640;
+  --primary-100: #2b2158;
+  --primary-200: #433173;
+  --primary-300: #8e75ff;
+  --primary-500: #a68cff;
+  --primary-600: #b89fff;
+  --primary-700: #d0c1ff;
+  --secondary-50: #381628;
+  --secondary-100: #4a1d34;
+  --secondary-200: #702746;
+  --secondary-500: #ff77a4;
+  --secondary-600: #ff8db2;
+  --secondary-700: #ffb6ce;
+  --accent-50: #0b3836;
+  --accent-100: #0d4742;
+  --accent-200: #11625a;
+  --accent-500: #43e1ca;
+  --accent-600: #68ead8;
+  --accent-700: #a0f4e7;
+  --shadow-sm: 0 6px 18px rgba(0, 0, 0, .26);
+  --shadow-md: 0 22px 58px rgba(0, 0, 0, .36);
+  --shadow-lg: 0 44px 110px rgba(0, 0, 0, .52);
+  --shadow-primary: 0 18px 44px rgba(124, 92, 255, .30);
+}

@@ -1,0 +1,10 @@
+CENSUS FLOW V2 — MISE À NIVEAU
+
+1. Copiez le dossier « upgrade-v2 » dans D:\projetmemoFF-complet
+2. Ouvrez un terminal PowerShell à la racine du projet.
+3. Exécutez :
+
+   Set-ExecutionPolicy -Scope Process Bypass
+   .\upgrade-v2\install-v2.ps1
+
+Le script sauvegarde les fichiers remplacés et ne touche pas à .env ni à PostgreSQL.

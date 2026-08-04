@@ -1,0 +1,5 @@
+import type { LucideIcon } from 'lucide-react-native'
+import { StyleSheet, Text, View } from 'react-native'
+import { colors, radius, shadow } from '../styles/theme'
+export default function MetricCard({ label, value, icon:Icon, tone=colors.primary }: {label:string;value:number|string;icon:LucideIcon;tone?:string}) { return <View style={styles.card}><View><Text style={styles.label}>{label}</Text><Text style={styles.value}>{typeof value==='number'?new Intl.NumberFormat('fr-FR').format(value):value}</Text></View><View style={[styles.icon,{backgroundColor:`${tone}18`}]}><Icon color={tone} size={20}/></View></View> }
+const styles=StyleSheet.create({card:{width:'48%',minHeight:105,backgroundColor:colors.white,borderWidth:1,borderColor:colors.border,borderRadius:radius.lg,padding:16,justifyContent:'space-between',flexDirection:'row',...shadow},label:{fontSize:12,color:colors.muted},value:{fontSize:24,fontWeight:'900',color:colors.text,marginTop:8},icon:{width:40,height:40,borderRadius:12,alignItems:'center',justifyContent:'center'}})

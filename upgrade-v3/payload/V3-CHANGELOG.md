@@ -1,0 +1,21 @@
+# Census Flow V3 — changements
+
+- page d’accueil publique avant authentification ;
+- interface web responsive et navigation par rôle ;
+- thème clair/sombre/système ;
+- français, malagasy et anglais ;
+- profil modifiable avec photo locale ;
+- création hiérarchique des chefs de région et agents ;
+- génération sécurisée des identifiants ;
+- envoi WhatsApp Cloud API avec modèle ou prévisualisation ;
+- campagnes dédiées, géographiques et programmables ;
+- activation/clôture automatique des campagnes ;
+- import complet de la géographie de Madagascar ;
+- carte monde/Madagascar avec progression réelle ;
+- collecte mobile guidée hors ligne ;
+- GPS, photos, date de naissance imprécise, CIN conditionnelle ;
+- CRUD local et synchronisation globale ;
+- statistiques réservées aux données validées ;
+- filtres territoriaux et classement des cinq zones les plus peuplées ;
+- exports PDF/impression et image ;
+- scripts de démarrage UTF-8 et chargement automatique de `.env`.

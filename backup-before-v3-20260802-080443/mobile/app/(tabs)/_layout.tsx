@@ -1,0 +1,18 @@
+import { Redirect, Tabs } from 'expo-router'
+import { Home, Map, RefreshCw, UserRound, UsersRound } from 'lucide-react-native'
+import { ActivityIndicator, Platform, View } from 'react-native'
+import { useAuth } from '../../src/auth/AuthContext'
+import { colors, radius, shadow } from '../../src/styles/theme'
+
+export default function TabsLayout(){
+  const {user,loading}=useAuth()
+  if(loading)return <View style={{flex:1,alignItems:'center',justifyContent:'center',backgroundColor:colors.background}}><ActivityIndicator color={colors.primary}/></View>
+  if(!user)return <Redirect href="/login"/>
+  return <Tabs screenOptions={{headerShown:false,tabBarActiveTintColor:colors.primary,tabBarInactiveTintColor:colors.muted,tabBarHideOnKeyboard:true,tabBarStyle:{position:'absolute',left:12,right:12,bottom:Platform.OS==='ios'?22:12,height:70,paddingTop:8,paddingBottom:8,borderTopWidth:0,borderRadius:radius.lg,backgroundColor:'rgba(255,255,255,.98)',...shadow},tabBarItemStyle:{borderRadius:radius.md},tabBarLabelStyle:{fontSize:9,fontWeight:'800'}}}>
+    <Tabs.Screen name="index" options={{title:'Accueil',tabBarIcon:({color})=><Home color={color} size={21}/>}}/>
+    <Tabs.Screen name="households" options={{title:'Ménages',tabBarIcon:({color})=><UsersRound color={color} size={21}/>}}/>
+    <Tabs.Screen name="map" options={{title:'Carte',tabBarIcon:({color})=><Map color={color} size={21}/>}}/>
+    <Tabs.Screen name="sync" options={{title:'Sync.',tabBarIcon:({color})=><RefreshCw color={color} size={21}/>}}/>
+    <Tabs.Screen name="profile" options={{title:'Profil',tabBarIcon:({color})=><UserRound color={color} size={21}/>}}/>
+  </Tabs>
+}

@@ -1,0 +1,11 @@
+import { useFocusEffect } from 'expo-router'
+import { LocateFixed } from 'lucide-react-native'
+import { useCallback, useRef, useState } from 'react'
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native'
+import MapView, { Marker, type Region } from 'react-native-maps'
+import { mobileApi } from '../../src/api/resources'
+import { colors, radius, spacing } from '../../src/styles/theme'
+import type { DwellingDto } from '../../src/types/api'
+const initial:Region={latitude:-18.8792,longitude:47.5079,latitudeDelta:12,longitudeDelta:12}
+export default function MapScreen(){const map=useRef<MapView>(null);const [items,setItems]=useState<DwellingDto[]>([]);const [loading,setLoading]=useState(true);const load=useCallback(async()=>{setLoading(true);try{setItems(await mobileApi.dwellings())}finally{setLoading(false)}},[]);useFocusEffect(useCallback(()=>{void load()},[load]));return <View style={styles.screen}>{loading&&<ActivityIndicator style={styles.loader} color={colors.primary}/>}<MapView ref={map} style={StyleSheet.absoluteFill} initialRegion={initial}>{items.map(item=><Marker key={item.id} coordinate={{latitude:item.latitude,longitude:item.longitude}} title={item.referenceCode} description={item.localityName??item.address??''} pinColor={item.recordStatus==='Validated'?colors.success:item.recordStatus==='Rejected'?colors.danger:colors.primary}/>)}</MapView><View style={styles.top}><Text style={styles.title}>Carte des habitations</Text><Text style={styles.subtitle}>{items.length} point(s) géolocalisé(s)</Text></View><Pressable style={styles.locate} onPress={()=>map.current?.animateToRegion(initial,500)}><LocateFixed color={colors.primary} size={22}/></Pressable></View>}
+const styles=StyleSheet.create({screen:{flex:1},loader:{position:'absolute',zIndex:4,top:60,alignSelf:'center'},top:{position:'absolute',top:16,left:16,right:16,backgroundColor:'rgba(255,255,255,.94)',borderRadius:radius.lg,padding:spacing.lg,borderWidth:1,borderColor:colors.border},title:{fontSize:18,fontWeight:'900',color:colors.text},subtitle:{fontSize:12,color:colors.muted,marginTop:3},locate:{position:'absolute',right:16,bottom:18,width:50,height:50,borderRadius:15,backgroundColor:colors.white,alignItems:'center',justifyContent:'center',borderWidth:1,borderColor:colors.border}})

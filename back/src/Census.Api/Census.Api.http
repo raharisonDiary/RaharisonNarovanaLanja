@@ -1,0 +1,13 @@
+@Census_Api_HostAddress = https://localhost:7001
+
+### État général de l’API
+GET {{Census_Api_HostAddress}}/api/v1/system/status
+Accept: application/json
+
+### Contrôle de santé
+GET {{Census_Api_HostAddress}}/health
+Accept: text/plain
+
+### Document OpenAPI
+GET {{Census_Api_HostAddress}}/openapi/v1.json
+Accept: application/json
