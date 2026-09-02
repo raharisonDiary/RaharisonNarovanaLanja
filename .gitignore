@@ -70,3 +70,19 @@ web.zip
 web.zip
 web.zip
 web.zip
+
+# Census Flow - local backups
+backup-before-*/
+mobile_backup/
+web_backup/
+web_v1_backup/
+
+mobile/.*-backup/
+web/.*-backup/
+web/.before-original-restore/
+web/.before-restore-broken/
+
+# Local development notes
+mobile/MOBILE_COLOR_ALIGNMENT.md
+web/DESIGN_PLAN.md
+web/RESPONSIVE_VERIFICATION.md
