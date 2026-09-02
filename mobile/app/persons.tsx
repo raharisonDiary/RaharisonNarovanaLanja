@@ -1,4 +1,4 @@
-import * as ImagePicker from 'expo-image-picker'
+﻿import * as ImagePicker from 'expo-image-picker'
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import {
   ArrowLeft,
@@ -36,6 +36,7 @@ import {
 } from 'react-native'
 import { messageFromError } from '../src/api/client'
 import { mobileApi } from '../src/api/resources'
+import { enqueuePerson } from '../src/storage/personQueue'
 import { useAuth } from '../src/auth/AuthContext'
 import FormField from '../src/components/FormField'
 import PrimaryButton from '../src/components/PrimaryButton'
@@ -333,10 +334,10 @@ export default function PersonsScreen() {
     const permission = await ImagePicker.requestCameraPermissionsAsync()
     if (!permission.granted) {
       Alert.alert(
-        tr(language, 'Permission refusée', 'Tsy nahazo alalana', 'Permission denied'),
+        tr(language, 'Permission refusÃ©e', 'Tsy nahazo alalana', 'Permission denied'),
         tr(
           language,
-          'Autorisez la caméra pour prendre la photo du citoyen.',
+          'Autorisez la camÃ©ra pour prendre la photo du citoyen.',
           'Omeo alalana ny fakantsary mba haka sary.',
           'Allow camera access to take the citizen photo.',
         ),
@@ -356,11 +357,11 @@ export default function PersonsScreen() {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync()
     if (!permission.granted) {
       Alert.alert(
-        tr(language, 'Permission refusée', 'Tsy nahazo alalana', 'Permission denied'),
+        tr(language, 'Permission refusÃ©e', 'Tsy nahazo alalana', 'Permission denied'),
         tr(
           language,
-          'Autorisez l’accès aux images pour importer une photo.',
-          'Omeo alalana ny fidirana amin’ny sary.',
+          'Autorisez lâ€™accÃ¨s aux images pour importer une photo.',
+          'Omeo alalana ny fidirana aminâ€™ny sary.',
           'Allow photo access to import an image.',
         ),
       )
@@ -541,7 +542,7 @@ export default function PersonsScreen() {
       setError(
         tr(
           language,
-          `Doublon probable : ${duplicate.fullName} existe déjà dans cette campagne.`,
+          `Doublon probable : ${duplicate.fullName} existe dÃ©jÃ  dans cette campagne.`,
           `Mety efa misy io olona io : ${duplicate.fullName} dia efa voasoratra amin'ity fanisana ity.`,
           `Possible duplicate: ${duplicate.fullName} already exists in this campaign.`,
         ),
@@ -557,10 +558,10 @@ export default function PersonsScreen() {
         await mobileApi.updatePerson(editing.id, payload)
         await load()
         Alert.alert(
-          tr(language, 'Citoyen modifié', 'Voaova ilay olona', 'Citizen updated'),
+          tr(language, 'Citoyen modifiÃ©', 'Voaova ilay olona', 'Citizen updated'),
           tr(
             language,
-            'Les informations ont été enregistrées avec succès.',
+            'Les informations ont Ã©tÃ© enregistrÃ©es avec succÃ¨s.',
             'Voatahiry soa aman-tsara ny fanovana.',
             'The information was saved successfully.',
           ),
@@ -569,21 +570,58 @@ export default function PersonsScreen() {
         return
       }
 
-      await mobileApi.createPerson(payload)
-      await load()
+      try {
+        await mobileApi.createPerson(payload)
+        await load()
+      } catch (exception) {
+        const message = messageFromError(exception)
+        const networkFailure =
+          /network|connexion|internet|fetch|timeout|offline/i.test(message)
+
+        if (!networkFailure) throw exception
+
+        await enqueuePerson(
+          payload,
+          `${form.firstName.trim()} ${form.lastName.trim()}`.trim(),
+          form.householdId,
+        )
+
+        const currentHouseholdId = form.householdId
+        Alert.alert(
+          tr(
+            language,
+            'Citoyen enregistrÃ© hors connexion',
+            'Voatahiry tsy misy Internet ilay olona',
+            'Citizen saved offline',
+          ),
+          tr(
+            language,
+            'Le citoyen a Ã©tÃ© enregistrÃ© localement. Il apparaÃ®tra dans Synchronisation et sera envoyÃ© lorsque la connexion reviendra.',
+            'Voatahiry ato an-toerana ilay olona. Hiseho ao aminâ€™ny Synchronisation izy ary halefa rehefa miverina ny Internet.',
+            'The citizen was saved locally. It will appear in Sync and upload when Internet returns.',
+          ),
+          [
+            {
+              text: 'OK',
+              onPress: closeWizard,
+            },
+          ],
+        )
+        return
+      }
 
       const currentHouseholdId = form.householdId
       Alert.alert(
         tr(
           language,
-          'Citoyen enregistré',
+          'Citoyen enregistrÃ©',
           'Voatahiry ilay olona',
           'Citizen saved',
         ),
         tr(
           language,
-          'Souhaitez-vous ajouter immédiatement une autre personne dans le même ménage ?',
-          'Hanampy olona hafa ao amin’io tokantrano io avy hatrany ve ianao?',
+          'Souhaitez-vous ajouter immÃ©diatement une autre personne dans le mÃªme mÃ©nage ?',
+          'Hanampy olona hafa ao aminâ€™io tokantrano io avy hatrany ve ianao?',
           'Would you like to add another person to the same household now?',
         ),
         [
@@ -665,7 +703,7 @@ export default function PersonsScreen() {
           <Text style={styles.subtitle}>
             {tr(
               language,
-              'Saisie guidée, photo, recherche et validation.',
+              'Saisie guidÃ©e, photo, recherche et validation.',
               'Fanontaniana tsikelikely, sary ary fanamarinana.',
               'Guided entry, photo, search and validation.',
             )}
@@ -692,7 +730,7 @@ export default function PersonsScreen() {
       <SelectField
         label={tr(
           language,
-          'Ménage (filtre)',
+          'MÃ©nage (filtre)',
           'Tokantrano (sivana)',
           'Household filter',
         )}
@@ -702,14 +740,14 @@ export default function PersonsScreen() {
           {
             label: tr(
               language,
-              'Tous les ménages',
+              'Tous les mÃ©nages',
               'Tokantrano rehetra',
               'All households',
             ),
             value: '',
           },
           ...households.map((household) => ({
-            label: `${household.referenceCode} · ${household.headFullName ?? ''}`,
+            label: `${household.referenceCode} Â· ${household.headFullName ?? ''}`,
             value: household.id,
           })),
         ]}
@@ -722,9 +760,9 @@ export default function PersonsScreen() {
           onChangeText={setSearch}
           placeholder={tr(
             language,
-            'Nom, CIN ou profession…',
-            'Anarana, CIN na asa…',
-            'Name, ID or occupation…',
+            'Nom, CIN ou professionâ€¦',
+            'Anarana, CIN na asaâ€¦',
+            'Name, ID or occupationâ€¦',
           )}
           placeholderTextColor={colors.muted}
           style={styles.searchInput}
@@ -766,8 +804,8 @@ export default function PersonsScreen() {
                   <View style={{ flex: 1 }}>
                     <Text style={styles.cardTitle}>{item.fullName}</Text>
                     <Text style={styles.meta}>
-                      {item.ageYears ?? '—'} · {item.sex} ·{' '}
-                      {item.occupation || '—'}
+                      {item.ageYears ?? 'â€”'} Â· {item.sex} Â·{' '}
+                      {item.occupation || 'â€”'}
                     </Text>
                     <Text style={styles.meta}>
                       {item.nationalId ||
@@ -864,7 +902,7 @@ export default function PersonsScreen() {
               </Text>
               <Text style={styles.subtitle}>
                 {tr(language, 'Question', 'Fanontaniana', 'Question')} {step + 1}{' '}
-                {tr(language, 'sur', 'amin’ny', 'of')} {TOTAL_STEPS}
+                {tr(language, 'sur', 'aminâ€™ny', 'of')} {TOTAL_STEPS}
               </Text>
             </View>
           </View>
@@ -900,14 +938,14 @@ export default function PersonsScreen() {
                 icon={Camera}
                 title={`1. ${tr(
                   language,
-                  'Ménage et photo',
+                  'MÃ©nage et photo',
                   'Tokantrano sy sary',
                   'Household and photo',
                 )}`}
                 text={tr(
                   language,
-                  'Sélectionnez le ménage puis prenez ou importez une photo nette.',
-                  'Safidio ny tokantrano ary makà na ampidiro sary mazava.',
+                  'SÃ©lectionnez le mÃ©nage puis prenez ou importez une photo nette.',
+                  'Safidio ny tokantrano ary makÃ  na ampidiro sary mazava.',
                   'Select the household, then take or import a clear photo.',
                 )}
               >
@@ -917,12 +955,12 @@ export default function PersonsScreen() {
                     <View style={{ flex: 1 }}>
                       <Text style={styles.readOnlyLabel}>
                         {required(
-                          tr(language, 'Ménage', 'Tokantrano', 'Household'),
+                          tr(language, 'MÃ©nage', 'Tokantrano', 'Household'),
                         )}
                       </Text>
                       <Text style={styles.readOnlyValue}>
                         {selectedHousehold
-                          ? `${selectedHousehold.referenceCode} · ${selectedHousehold.headFullName ?? ''}`
+                          ? `${selectedHousehold.referenceCode} Â· ${selectedHousehold.headFullName ?? ''}`
                           : form.householdId}
                       </Text>
                     </View>
@@ -931,18 +969,18 @@ export default function PersonsScreen() {
                   <>
                     <SelectField
                       label={required(
-                        tr(language, 'Ménage', 'Tokantrano', 'Household'),
+                        tr(language, 'MÃ©nage', 'Tokantrano', 'Household'),
                       )}
                       value={form.householdId}
                       onChange={(value) => setValue('householdId', value)}
                       placeholder={tr(
                         language,
-                        'Rechercher un ménage',
+                        'Rechercher un mÃ©nage',
                         'Hikaroka tokantrano',
                         'Search for a household',
                       )}
                       options={households.map((household) => ({
-                        label: `${household.referenceCode} · ${household.headFullName ?? ''}`,
+                        label: `${household.referenceCode} Â· ${household.headFullName ?? ''}`,
                         value: household.id,
                       }))}
                     />
@@ -964,7 +1002,7 @@ export default function PersonsScreen() {
                         <Text style={styles.createHouseholdTitle}>
                           {tr(
                             language,
-                            'Créer un nouveau ménage',
+                            'CrÃ©er un nouveau mÃ©nage',
                             'Hamorona tokantrano vaovao',
                             'Create a new household',
                           )}
@@ -972,7 +1010,7 @@ export default function PersonsScreen() {
                         <Text style={styles.createHouseholdText}>
                           {tr(
                             language,
-                            'À utiliser si le ménage n’existe pas encore.',
+                            'Ã€ utiliser si le mÃ©nage nâ€™existe pas encore.',
                             'Ampiasao raha mbola tsy misy ilay tokantrano.',
                             'Use this when the household does not exist yet.',
                           )}
@@ -1012,7 +1050,7 @@ export default function PersonsScreen() {
                           tr(
                             language,
                             'Photo du citoyen',
-                            'Sarin’ilay olona',
+                            'Sarinâ€™ilay olona',
                             'Citizen photo',
                           ),
                         )}
@@ -1020,7 +1058,7 @@ export default function PersonsScreen() {
                       <Text style={styles.photoHint}>
                         {tr(
                           language,
-                          'Visage centré et lumière suffisante.',
+                          'Visage centrÃ© et lumiÃ¨re suffisante.',
                           'Ataovy eo afovoany ny tarehy ary ampy hazavana.',
                           'Center the face with sufficient light.',
                         )}
@@ -1072,13 +1110,13 @@ export default function PersonsScreen() {
                 icon={UserRound}
                 title={`2. ${tr(
                   language,
-                  'Identité du citoyen',
+                  'IdentitÃ© du citoyen',
                   'Mombamomba ilay olona',
                   'Citizen identity',
                 )}`}
                 text={tr(
                   language,
-                  'Répondez aux questions d’identité. Les champs marqués d’un astérisque sont obligatoires.',
+                  'RÃ©pondez aux questions dâ€™identitÃ©. Les champs marquÃ©s dâ€™un astÃ©risque sont obligatoires.',
                   'Fenoy ny mombamomba. Tsy maintsy fenoina ireo misy kintana.',
                   'Answer the identity questions. Fields marked with an asterisk are required.',
                 )}
@@ -1091,7 +1129,7 @@ export default function PersonsScreen() {
                 />
                 <FormField
                   label={required(
-                    tr(language, 'Prénoms', 'Fanampin’anarana', 'First names'),
+                    tr(language, 'PrÃ©noms', 'Fanampinâ€™anarana', 'First names'),
                   )}
                   value={form.firstName}
                   onChangeText={(value) => setValue('firstName', value)}
@@ -1102,7 +1140,7 @@ export default function PersonsScreen() {
                   onChange={(value) => setValue('sex', value as PersonSex)}
                   options={[
                     {
-                      label: tr(language, 'Féminin', 'Vavy', 'Female'),
+                      label: tr(language, 'FÃ©minin', 'Vavy', 'Female'),
                       value: 'Female',
                     },
                     {
@@ -1112,7 +1150,7 @@ export default function PersonsScreen() {
                     {
                       label: tr(
                         language,
-                        'Non déclaré',
+                        'Non dÃ©clarÃ©',
                         'Tsy voalaza',
                         'Not stated',
                       ),
@@ -1140,13 +1178,13 @@ export default function PersonsScreen() {
                 icon={UserRound}
                 title={`3. ${tr(
                   language,
-                  'Naissance et âge',
+                  'Naissance et Ã¢ge',
                   'Fahaterahana sy taona',
                   'Birth and age',
                 )}`}
                 text={tr(
                   language,
-                  'Choisissez la précision réellement connue. Une date complète n’est pas obligatoire.',
+                  'Choisissez la prÃ©cision rÃ©ellement connue. Une date complÃ¨te nâ€™est pas obligatoire.',
                   'Safidio izay tena fantatra. Tsy voatery ho feno ny daty.',
                   'Choose the information that is actually known. A complete date is not required.',
                 )}
@@ -1168,11 +1206,11 @@ export default function PersonsScreen() {
                     ],
                     [
                       'year',
-                      tr(language, 'Année seulement', 'Taona ihany', 'Year only'),
+                      tr(language, 'AnnÃ©e seulement', 'Taona ihany', 'Year only'),
                     ],
                     [
                       'age',
-                      tr(language, 'Âge déclaré', 'Taona voalaza', 'Declared age'),
+                      tr(language, 'Ã‚ge dÃ©clarÃ©', 'Taona voalaza', 'Declared age'),
                     ],
                     [
                       'unknown',
@@ -1203,7 +1241,7 @@ export default function PersonsScreen() {
                     label={required(
                       tr(
                         language,
-                        'Année de naissance',
+                        'AnnÃ©e de naissance',
                         'Taona nahaterahana',
                         'Year of birth',
                       ),
@@ -1221,7 +1259,7 @@ export default function PersonsScreen() {
                     label={required(
                       tr(
                         language,
-                        'Âge déclaré',
+                        'Ã‚ge dÃ©clarÃ©',
                         'Taona voalaza',
                         'Declared age',
                       ),
@@ -1239,7 +1277,7 @@ export default function PersonsScreen() {
                     label={required(
                       tr(
                         language,
-                        'Catégorie d’âge',
+                        'CatÃ©gorie dâ€™Ã¢ge',
                         'Sokajin-taona',
                         'Age category',
                       ),
@@ -1284,19 +1322,19 @@ export default function PersonsScreen() {
                     {adult
                       ? tr(
                           language,
-                          'Adulte — 18 ans ou plus',
-                          'Olon-dehibe — 18 taona no ho miakatra',
-                          'Adult — 18 or older',
+                          'Adulte â€” 18 ans ou plus',
+                          'Olon-dehibe â€” 18 taona no ho miakatra',
+                          'Adult â€” 18 or older',
                         )
                       : tr(
                           language,
-                          'Mineur — moins de 18 ans',
+                          'Mineur â€” moins de 18 ans',
                           'Zaza tsy ampy taona',
-                          'Minor — under 18',
+                          'Minor â€” under 18',
                         )}
                   </Text>
                   <Text style={styles.ageValue}>
-                    {computedAge ?? '—'}{' '}
+                    {computedAge ?? 'â€”'}{' '}
                     {tr(language, 'ans', 'taona', 'years')}
                   </Text>
                 </View>
@@ -1308,7 +1346,7 @@ export default function PersonsScreen() {
                 icon={Check}
                 title={`4. ${tr(
                   language,
-                  'Carte d’identité nationale',
+                  'Carte dâ€™identitÃ© nationale',
                   'Kara-panondrom-pirenena',
                   'National identity card',
                 )}`}
@@ -1316,14 +1354,14 @@ export default function PersonsScreen() {
                   adult
                     ? tr(
                         language,
-                        'Un majeur peut être enregistré même s’il ne possède pas de CIN.',
+                        'Un majeur peut Ãªtre enregistrÃ© mÃªme sâ€™il ne possÃ¨de pas de CIN.',
                         'Azo soratana ny olon-dehibe na dia tsy manana CIN aza.',
                         'An adult can be registered even without a national ID.',
                       )
                     : tr(
                         language,
-                        'Aucune question CIN n’est demandée pour une personne mineure.',
-                        'Tsy misy fanontaniana CIN ho an’ny zaza tsy ampy taona.',
+                        'Aucune question CIN nâ€™est demandÃ©e pour une personne mineure.',
+                        'Tsy misy fanontaniana CIN ho anâ€™ny zaza tsy ampy taona.',
                         'No national ID questions are required for a minor.',
                       )
                 }
@@ -1334,7 +1372,7 @@ export default function PersonsScreen() {
                       label={required(
                         tr(
                           language,
-                          'Le citoyen possède-t-il une CIN ?',
+                          'Le citoyen possÃ¨de-t-il une CIN ?',
                           'Manana CIN ve ilay olona?',
                           'Does the citizen have a national ID?',
                         ),
@@ -1361,8 +1399,8 @@ export default function PersonsScreen() {
                           label={required(
                             tr(
                               language,
-                              'Numéro CIN',
-                              'Laharan’ny CIN',
+                              'NumÃ©ro CIN',
+                              'Laharanâ€™ny CIN',
                               'National ID number',
                             ),
                           )}
@@ -1376,7 +1414,7 @@ export default function PersonsScreen() {
                           label={optional(
                             tr(
                               language,
-                              'Date de délivrance',
+                              'Date de dÃ©livrance',
                               'Daty namoahana',
                               'Issue date',
                             ),
@@ -1391,7 +1429,7 @@ export default function PersonsScreen() {
                           label={optional(
                             tr(
                               language,
-                              'Lieu de délivrance',
+                              'Lieu de dÃ©livrance',
                               'Toerana namoahana',
                               'Issue place',
                             ),
@@ -1407,7 +1445,7 @@ export default function PersonsScreen() {
                         <Text style={styles.informationText}>
                           {tr(
                             language,
-                            'Les champs CIN resteront vides. L’enregistrement peut continuer.',
+                            'Les champs CIN resteront vides. Lâ€™enregistrement peut continuer.',
                             'Avela ho banga ny saha CIN ary afaka manohy.',
                             'National ID fields will remain empty. Registration can continue.',
                           )}
@@ -1420,8 +1458,8 @@ export default function PersonsScreen() {
                     <Text style={styles.informationText}>
                       {tr(
                         language,
-                        'Cette étape est automatiquement validée pour un mineur.',
-                        'Voamarina ho azy ity dingana ity ho an’ny zaza tsy ampy taona.',
+                        'Cette Ã©tape est automatiquement validÃ©e pour un mineur.',
+                        'Voamarina ho azy ity dingana ity ho anâ€™ny zaza tsy ampy taona.',
                         'This step is automatically validated for a minor.',
                       )}
                     </Text>
@@ -1441,8 +1479,8 @@ export default function PersonsScreen() {
                 )}`}
                 text={tr(
                   language,
-                  'Le nombre d’enfants est demandé uniquement pour une personne mariée ou veuve.',
-                  'Ny isan’ny zanaka dia anontaniana amin’ny manambady na maty vady ihany.',
+                  'Le nombre dâ€™enfants est demandÃ© uniquement pour une personne mariÃ©e ou veuve.',
+                  'Ny isanâ€™ny zanaka dia anontaniana aminâ€™ny manambady na maty vady ihany.',
                   'The number of children is requested only for married or widowed people.',
                 )}
               >
@@ -1461,11 +1499,11 @@ export default function PersonsScreen() {
                   }
                   options={[
                     {
-                      label: tr(language, 'Célibataire', 'Tsy manambady', 'Single'),
+                      label: tr(language, 'CÃ©libataire', 'Tsy manambady', 'Single'),
                       value: 'Single',
                     },
                     {
-                      label: tr(language, 'Marié(e)', 'Manambady', 'Married'),
+                      label: tr(language, 'MariÃ©(e)', 'Manambady', 'Married'),
                       value: 'Married',
                     },
                     {
@@ -1473,15 +1511,15 @@ export default function PersonsScreen() {
                       value: 'Widowed',
                     },
                     {
-                      label: tr(language, 'Divorcé(e)', 'Nisaraka ara-dalàna', 'Divorced'),
+                      label: tr(language, 'DivorcÃ©(e)', 'Nisaraka ara-dalÃ na', 'Divorced'),
                       value: 'Divorced',
                     },
                     {
-                      label: tr(language, 'Séparé(e)', 'Misaraka', 'Separated'),
+                      label: tr(language, 'SÃ©parÃ©(e)', 'Misaraka', 'Separated'),
                       value: 'Separated',
                     },
                     {
-                      label: tr(language, 'Neutre / non déclaré', 'Tsy voalaza', 'Not stated'),
+                      label: tr(language, 'Neutre / non dÃ©clarÃ©', 'Tsy voalaza', 'Not stated'),
                       value: 'NotStated',
                     },
                   ]}
@@ -1492,8 +1530,8 @@ export default function PersonsScreen() {
                     label={required(
                       tr(
                         language,
-                        'Nombre d’enfants',
-                        'Isan’ny zanaka',
+                        'Nombre dâ€™enfants',
+                        'Isanâ€™ny zanaka',
                         'Number of children',
                       ),
                     )}
@@ -1508,8 +1546,8 @@ export default function PersonsScreen() {
                   label={required(
                     tr(
                       language,
-                      'Lien avec le chef de ménage',
-                      'Fifandraisana amin’ny loham-pianakaviana',
+                      'Lien avec le chef de mÃ©nage',
+                      'Fifandraisana aminâ€™ny loham-pianakaviana',
                       'Relationship to household head',
                     ),
                   )}
@@ -1522,7 +1560,7 @@ export default function PersonsScreen() {
                   }
                   options={[
                     {
-                      label: tr(language, 'Chef de ménage', 'Loham-pianakaviana', 'Household head'),
+                      label: tr(language, 'Chef de mÃ©nage', 'Loham-pianakaviana', 'Household head'),
                       value: 'Head',
                     },
                     {
@@ -1538,7 +1576,7 @@ export default function PersonsScreen() {
                       value: 'Parent',
                     },
                     {
-                      label: tr(language, 'Frère / sœur', 'Rahalahy / anabavy', 'Sibling'),
+                      label: tr(language, 'FrÃ¨re / sÅ“ur', 'Rahalahy / anabavy', 'Sibling'),
                       value: 'Sibling',
                     },
                     {
@@ -1559,14 +1597,14 @@ export default function PersonsScreen() {
                 icon={CheckCircle2}
                 title={`6. ${tr(
                   language,
-                  'Profession et vérification',
+                  'Profession et vÃ©rification',
                   'Asa sy fanamarinana',
                   'Occupation and review',
                 )}`}
                 text={tr(
                   language,
-                  'Renseignez la profession, puis vérifiez les informations avant l’enregistrement.',
-                  'Fenoy ny asa ary hamarino ny mombamomba alohan’ny hitahirizana.',
+                  'Renseignez la profession, puis vÃ©rifiez les informations avant lâ€™enregistrement.',
+                  'Fenoy ny asa ary hamarino ny mombamomba alohanâ€™ny hitahirizana.',
                   'Enter the occupation, then review the information before saving.',
                 )}
               >
@@ -1574,7 +1612,7 @@ export default function PersonsScreen() {
                   label={required(
                     tr(
                       language,
-                      'Profession / activité',
+                      'Profession / activitÃ©',
                       'Asa / fivelomana',
                       'Occupation / activity',
                     ),
@@ -1583,16 +1621,16 @@ export default function PersonsScreen() {
                   onChangeText={(value) => setValue('occupation', value)}
                   placeholder={tr(
                     language,
-                    'Étudiant, enseignant, agriculteur…',
-                    'Mpianatra, mpampianatra, tantsaha…',
-                    'Student, teacher, farmer…',
+                    'Ã‰tudiant, enseignant, agriculteurâ€¦',
+                    'Mpianatra, mpampianatra, tantsahaâ€¦',
+                    'Student, teacher, farmerâ€¦',
                   )}
                 />
                 <FormField
                   label={optional(
                     tr(
                       language,
-                      'Téléphone personnel',
+                      'TÃ©lÃ©phone personnel',
                       'Finday manokana',
                       'Personal phone',
                     ),
@@ -1603,7 +1641,7 @@ export default function PersonsScreen() {
                 />
                 <FormField
                   label={optional(
-                    tr(language, 'Nationalité', 'Zom-pirenena', 'Nationality'),
+                    tr(language, 'NationalitÃ©', 'Zom-pirenena', 'Nationality'),
                   )}
                   value={form.nationality}
                   onChangeText={(value) => setValue('nationality', value)}
@@ -1621,13 +1659,13 @@ export default function PersonsScreen() {
                       {form.firstName} {form.lastName}
                     </Text>
                     <Text style={styles.reviewLine}>
-                      {computedAge ?? '—'} {tr(language, 'ans', 'taona', 'years')} ·{' '}
+                      {computedAge ?? 'â€”'} {tr(language, 'ans', 'taona', 'years')} Â·{' '}
                       {adult
                         ? tr(language, 'Majeur', 'Olon-dehibe', 'Adult')
                         : tr(language, 'Mineur', 'Zaza tsy ampy taona', 'Minor')}
                     </Text>
                     <Text style={styles.reviewLine}>
-                      {form.occupation || '—'}
+                      {form.occupation || 'â€”'}
                     </Text>
                     <Text style={styles.reviewLine}>
                       {selectedHousehold?.referenceCode ?? form.householdId}
@@ -1648,7 +1686,7 @@ export default function PersonsScreen() {
             >
               <ChevronLeft color={colors.textSoft} size={18} />
               <Text style={styles.previousText}>
-                {tr(language, 'Précédent', 'Teo aloha', 'Previous')}
+                {tr(language, 'PrÃ©cÃ©dent', 'Teo aloha', 'Previous')}
               </Text>
             </Pressable>
 
@@ -1864,6 +1902,9 @@ const styles = StyleSheet.create({
   actionText: { color: colors.textSoft, fontSize: 10, fontWeight: '700' },
   modal: { flex: 1, backgroundColor: colors.background },
   modalHeader: {
+    width: '100%',
+    maxWidth: 620,
+    alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
@@ -1876,6 +1917,9 @@ const styles = StyleSheet.create({
     ...softShadow,
   },
   progressTrack: {
+    width: '100%',
+    maxWidth: 620,
+    alignSelf: 'center',
     flexDirection: 'row',
     gap: 5,
     paddingHorizontal: spacing.lg,
@@ -1890,7 +1934,11 @@ const styles = StyleSheet.create({
   },
   progressSegmentActive: { backgroundColor: colors.primary, shadowColor: colors.primary, shadowOpacity: 0.22, shadowRadius: 5 },
   modalContent: {
-    padding: spacing.lg,
+    width: '100%',
+    maxWidth: 620,
+    alignSelf: 'center',
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
     gap: spacing.md,
     paddingBottom: spacing.xxl,
   },
@@ -1901,6 +1949,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   wizardCard: {
+    width: '100%',
     gap: spacing.lg,
     backgroundColor: colors.white,
     borderWidth: 1,
@@ -2084,3 +2133,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.sm,
   },
 })
+
+
+
+

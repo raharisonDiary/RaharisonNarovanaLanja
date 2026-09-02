@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, type PropsWithChildren, type ReactNode } from 'react'
 import {
   Animated,
+  Platform,
   StyleSheet,
   View,
   type StyleProp,
@@ -89,9 +90,9 @@ export function GradientSurface({
 
   const gradient =
     variant === 'success'
-      ? [palette.accent, palette.success, '#0B5C56']
+      ? [palette.success, '#059669', '#059669']
       : variant === 'primary'
-        ? [palette.primary, palette.primaryHover, palette.secondary]
+        ? [palette.primary, palette.primary, palette.primaryHover]
         : variant === 'hero'
           ? [palette.heroStart, palette.heroMiddle, palette.heroEnd]
           : [palette.heroStart, palette.heroMiddle, palette.heroEnd]
@@ -103,12 +104,15 @@ export function GradientSurface({
         {
           borderRadius: radiusValue,
           backgroundColor: gradient[0],
-          borderColor: isDark ? 'rgba(166,140,255,0.24)' : 'rgba(124,92,255,0.22)',
+          borderColor: isDark ? 'rgba(130,195,241,0.22)' : 'rgba(184,221,251,0.82)',
           opacity,
           transform: [{ translateY }],
         },
         surfaceShadow(isDark, 'raised'),
         style,
+        Platform.OS === 'web' && (variant === 'hero' || variant === 'primary')
+          ? styles.webCompactGradient
+          : null,
       ]}
     >
       <Svg pointerEvents="none" style={StyleSheet.absoluteFill} width="100%" height="100%">
@@ -120,10 +124,10 @@ export function GradientSurface({
           </LinearGradient>
         </Defs>
         <Rect width="100%" height="100%" fill={`url(#${gradientId})`} />
-        {decorative ? (
+        {decorative && Platform.OS !== 'web' ? (
           <>
-            <Circle cx="92%" cy="2%" r="84" fill="rgba(255,119,164,0.14)" />
-            <Circle cx="100%" cy="100%" r="72" fill="rgba(67,225,202,0.11)" />
+            <Circle cx="92%" cy="2%" r="84" fill="rgba(255,255,255,0.12)" />
+            <Circle cx="100%" cy="100%" r="72" fill={palette.glowIndigo} />
             <Circle cx="0%" cy="100%" r="45" fill="rgba(255,255,255,0.05)" />
           </>
         ) : null}
@@ -176,6 +180,10 @@ const styles = StyleSheet.create({
   densePurple: { width: 300, height: 300, left: -175, top: 260 },
   glowTeal: { width: 260, height: 260, right: -165, bottom: -145 },
   gradientSurface: { position: 'relative', overflow: 'hidden', borderWidth: 1 },
+  webCompactGradient: {
+    minHeight: 0,
+    maxHeight: 170,
+  },
   gradientContent: { position: 'relative', zIndex: 1 },
   card: { position: 'relative', overflow: 'hidden', borderWidth: 1, borderRadius: radius.lg },
   cardAccent: { position: 'absolute', left: 0, right: 0, top: 0 },

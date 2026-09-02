@@ -1,4 +1,4 @@
-import * as Location from 'expo-location'
+﻿import * as Location from 'expo-location'
 import { Stack, useRouter } from 'expo-router'
 import {
   ArrowLeft,
@@ -113,10 +113,10 @@ export default function DwellingsScreen() {
     (campaign) => campaign.status === 'Active',
   )
   const areaName = (id: string) =>
-    areas.find((area) => area.id === id)?.name ?? '—'
+    areas.find((area) => area.id === id)?.name ?? 'â€”'
   const campaignFor = (id: string) =>
     campaigns.find((campaign) => campaign.id === id)
-  const campaignName = (id: string) => campaignFor(id)?.name ?? '—'
+  const campaignName = (id: string) => campaignFor(id)?.name ?? 'â€”'
   const filtered = useMemo(
     () => items.filter((item) =>
       `${item.referenceCode} ${item.address ?? ''} ${item.localityName ?? ''}`
@@ -168,7 +168,7 @@ export default function DwellingsScreen() {
     if (permission.status !== 'granted') {
       Alert.alert(tr(
         language,
-        'Permission refusée',
+        'Permission refusÃ©e',
         'Tsy nahazo alalana',
         'Permission denied',
       ))
@@ -185,7 +185,7 @@ export default function DwellingsScreen() {
     if (!campaignId || !fokontanyId || !latitude || !longitude) {
       setError(tr(
         language,
-        'Choisissez la campagne, le fokontany et vérifiez le GPS.',
+        'Choisissez la campagne, le fokontany et vÃ©rifiez le GPS.',
         'Safidio ny fanisana sy fokontany ary hamarino ny GPS.',
         'Select campaign and fokontany, then verify GPS.',
       ))
@@ -275,7 +275,7 @@ export default function DwellingsScreen() {
           <Text style={styles.subtitle}>
             {tr(
               language,
-              'Campagne, territoire, GPS et référence automatique.',
+              'Campagne, territoire, GPS et rÃ©fÃ©rence automatique.',
               'Fanisana, faritra, GPS ary kaody mandeha ho azy.',
               'Campaign, territory, GPS and automatic reference.',
             )}
@@ -302,9 +302,9 @@ export default function DwellingsScreen() {
           onChangeText={setSearch}
           placeholder={tr(
             language,
-            'Référence ou adresse…',
-            'Kaody na adiresy…',
-            'Reference or address…',
+            'RÃ©fÃ©rence ou adresseâ€¦',
+            'Kaody na adiresyâ€¦',
+            'Reference or addressâ€¦',
           )}
           placeholderTextColor={colors.muted}
           style={styles.searchInput}
@@ -334,7 +334,7 @@ export default function DwellingsScreen() {
                   <View style={{ flex: 1 }}>
                     <Text style={styles.cardTitle}>{item.referenceCode}</Text>
                     <Text style={styles.meta}>
-                      {campaignName(item.campaignId)} · {item.localityName || areaName(item.enumerationAreaId)}
+                      {campaignName(item.campaignId)} Â· {item.localityName || areaName(item.enumerationAreaId)}
                     </Text>
                     <Text style={styles.meta}>
                       {item.latitude.toFixed(5)}, {item.longitude.toFixed(5)}
@@ -406,7 +406,7 @@ export default function DwellingsScreen() {
             </Pressable>
             <Text style={styles.title}>
               {editing
-                ? tr(language, 'Modifier l’habitation', 'Hanova trano', 'Edit dwelling')
+                ? tr(language, 'Modifier lâ€™habitation', 'Hanova trano', 'Edit dwelling')
                 : tr(language, 'Nouvelle habitation', 'Trano vaovao', 'New dwelling')}
             </Text>
           </View>
@@ -445,12 +445,12 @@ export default function DwellingsScreen() {
             options={fokontany.map((area) => ({ label: area.name, value: area.id }))}
           />
           <FormField
-            label={tr(language, 'Référence automatique', 'Kaody mandeha ho azy', 'Automatic reference')}
+            label={tr(language, 'RÃ©fÃ©rence automatique', 'Kaody mandeha ho azy', 'Automatic reference')}
             value={referenceCode}
             editable={false}
           />
           <FormField
-            label={tr(language, 'Adresse / repère', 'Adiresy / famantarana', 'Address / landmark')}
+            label={tr(language, 'Adresse / repÃ¨re', 'Adiresy / famantarana', 'Address / landmark')}
             value={address}
             onChangeText={setAddress}
           />
@@ -460,12 +460,12 @@ export default function DwellingsScreen() {
               <Text style={styles.gpsTitle}>
                 {latitude && longitude
                   ? `${latitude}, ${longitude}`
-                  : tr(language, 'GPS non vérifié', 'GPS mbola tsy voamarina', 'GPS not verified')}
+                  : tr(language, 'GPS non vÃ©rifiÃ©', 'GPS mbola tsy voamarina', 'GPS not verified')}
               </Text>
             </View>
             <Pressable style={styles.gpsButton} onPress={() => void locate()}>
               <Text style={styles.gpsButtonText}>
-                {tr(language, 'Vérifier', 'Hamarino', 'Verify')}
+                {tr(language, 'VÃ©rifier', 'Hamarino', 'Verify')}
               </Text>
             </Pressable>
           </View>
@@ -510,7 +510,17 @@ function Action({
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background, padding: spacing.lg, gap: 12 },
-  header: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 6 },
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginTop: 6,
+    marginBottom: 4,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
   back: { width: 44, height: 44, borderRadius: 14, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: colors.border },
   add: { width: 44, height: 44, borderRadius: 14, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' },
   title: { color: colors.text, fontSize: 22, fontWeight: '900' },
@@ -527,11 +537,37 @@ const styles = StyleSheet.create({
   action: { minHeight: 44, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', gap: 5 },
   actionDisabled: { opacity: 0.45 },
   actionText: { color: colors.textSoft, fontSize: 10, fontWeight: '700' },
-  modal: { flex: 1, backgroundColor: colors.background },
-  modalContent: { padding: spacing.lg, gap: 14, paddingBottom: 44 },
-  gps: { minHeight: 68, flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12, backgroundColor: colors.primarySoft, borderRadius: radius.md },
+  modal: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  modalContent: {
+    width: '100%',
+    maxWidth: 620,
+    alignSelf: 'center',
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
+    gap: 14,
+    paddingBottom: 48,
+  },
+  gps: {
+    width: '100%',
+    minHeight: 68,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: 10,
+    padding: 12,
+    backgroundColor: colors.primarySoft,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
   gpsTitle: { color: colors.text, fontWeight: '800', fontSize: 11 },
   gpsButton: { backgroundColor: colors.primary, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 9 },
   gpsButtonText: { color: colors.navy, fontWeight: '900', fontSize: 10 },
   error: { color: colors.danger, backgroundColor: colors.dangerSoft, padding: 10, borderRadius: 10 },
 })
+
+
+

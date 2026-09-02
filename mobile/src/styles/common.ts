@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import {
   colors,
   radius,
@@ -10,6 +10,9 @@ import {
 export const commonStyles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
   content: {
+    width: '100%',
+    maxWidth: Platform.OS === 'web' ? 1180 : undefined,
+    alignSelf: Platform.OS === 'web' ? 'center' : undefined,
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg,
     paddingBottom: 116,
@@ -46,6 +49,7 @@ export const commonStyles = StyleSheet.create({
     marginBottom: 7,
   },
   input: {
+    width: '100%',
     minHeight: 52,
     borderWidth: 1,
     borderColor: colors.border,
@@ -84,7 +88,7 @@ export const commonStyles = StyleSheet.create({
     backgroundColor: colors.dangerSoft,
     borderRadius: radius.md,
     borderWidth: 1,
-    borderColor: '#FECACA',
+    borderColor: '#FFE4E6',
     padding: spacing.md,
   },
   row: { flexDirection: 'row', alignItems: 'center' },

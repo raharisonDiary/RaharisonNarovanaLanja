@@ -191,10 +191,7 @@ input:focus, select:focus, textarea:focus {
 
 .auth-page { background: var(--gray-50); }
 .auth-story {
-  background:
-    linear-gradient(180deg, rgba(5,20,32,.14), rgba(5,20,32,.86)),
-    url('/images/census-flow-analytics.webp') center / cover no-repeat,
-    var(--gradient-night);
+  background: var(--gradient-night);
 }
 .auth-story::after { opacity: .16; }
 .auth-story__glow--one { background: rgba(124,92,255,.40); }

@@ -232,14 +232,14 @@ export default function StatisticsScreen() {
               <Svg style={StyleSheet.absoluteFill} width="100%" height="100%">
                 <Defs>
                   <LinearGradient id="statsHero" x1="0" y1="0" x2="1" y2="1">
-                    <Stop offset="0" stopColor="#07111F" />
-                    <Stop offset="0.62" stopColor="#1D3557" />
-                    <Stop offset="1" stopColor="#7A2250" />
+                    <Stop offset="0" stopColor="#0282E8" />
+                    <Stop offset="0.58" stopColor="#0176D4" />
+                    <Stop offset="1" stopColor="#02579B" />
                   </LinearGradient>
                 </Defs>
                 <Rect width="100%" height="100%" fill="url(#statsHero)" />
                 <Circle cx="86%" cy="4" r="88" fill="rgba(255,255,255,.16)" />
-                <Circle cx="105%" cy="102%" r="80" fill="rgba(20,184,166,.28)" />
+                <Circle cx="105%" cy="102%" r="80" fill="rgba(245,158,11,.18)" />
               </Svg>
               <Text style={styles.heroEyebrow}>DONNÉES VALIDÉES</Text>
               <Text style={styles.heroTitle}>{data.campaignName}</Text>
@@ -366,7 +366,7 @@ function GenderDonut({
               cy="60"
               r={radiusValue}
               fill="none"
-              stroke="#E2E8F0"
+              stroke="#DDE6EE"
               strokeWidth="16"
             />
             <Circle
@@ -374,7 +374,7 @@ function GenderDonut({
               cy="60"
               r={radiusValue}
               fill="none"
-              stroke="#6366F1"
+              stroke="#0176D4"
               strokeWidth="16"
               strokeLinecap="round"
               strokeDasharray={`${femaleLength} ${circumference}`}
@@ -385,7 +385,7 @@ function GenderDonut({
               cy="60"
               r={radiusValue}
               fill="none"
-              stroke="#14B8A6"
+              stroke="#6C8DAB"
               strokeWidth="16"
               strokeLinecap="round"
               strokeDasharray={`${maleLength} ${circumference}`}
@@ -546,7 +546,7 @@ const styles = StyleSheet.create({
   },
   heroEyebrow: { color: colors.accentLight, fontSize: 10, fontWeight: '900', letterSpacing: 1.2 },
   heroTitle: { color: '#FFFFFF', fontSize: 27, fontWeight: '900', marginTop: 8 },
-  heroSubtitle: { color: '#E0E7FF', fontSize: 12, marginTop: 6 },
+  heroSubtitle: { color: '#D9EDFF', fontSize: 12, marginTop: 6 },
   metrics: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   metric: {
     position: 'relative',

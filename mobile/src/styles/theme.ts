@@ -36,63 +36,63 @@ function semanticColor(
 }
 
 export const colors = {
-  primary: semanticColor('primary', '#7C5CFF', '#A68CFF'),
-  primaryLight: semanticColor('primary-light', '#9A6DFF', '#B89FFF'),
-  primaryDark: semanticColor('primary-dark', '#5332C4', '#D0C1FF'),
-  primarySoft: semanticColor('primary-soft', '#F3EFFF', '#251B4D'),
-  primaryMist: semanticColor('primary-border', '#D1C0FF', '#4B397A'),
+  primary: semanticColor('primary', '#0176D4', '#61AFE9'),
+  primaryLight: semanticColor('primary-light', '#0282E8', '#82C3F1'),
+  primaryDark: semanticColor('primary-dark', '#01457D', '#B1DCF7'),
+  primarySoft: semanticColor('primary-soft', '#EEF7FF', '#112A48'),
+  primaryMist: semanticColor('primary-border', '#B8DDFB', '#1A4C7B'),
 
-  secondary: semanticColor('secondary', '#FF5D8F', '#FF77A4'),
-  secondaryLight: semanticColor('secondary-light', '#FF8DB2', '#FF9FBE'),
-  secondaryDark: semanticColor('secondary-dark', '#BB315D', '#FFC0D3'),
-  secondarySoft: semanticColor('secondary-soft', '#FFF0F5', '#3A182B'),
+  secondary: semanticColor('secondary', '#F59E0B', '#E6A44C'),
+  secondaryLight: semanticColor('secondary-light', '#FBD38D', '#F1BC70'),
+  secondaryDark: semanticColor('secondary-dark', '#B45309', '#F8D59D'),
+  secondarySoft: semanticColor('secondary-soft', '#FFF8EB', '#332719'),
 
-  accent: semanticColor('accent', '#19C8AD', '#43E1CA'),
-  accentLight: semanticColor('accent-light', '#42DBC4', '#68EAD8'),
-  accentDark: semanticColor('accent-dark', '#087967', '#A0F4E7'),
-  accentSoft: semanticColor('accent-soft', '#EAFFF9', '#0B3836'),
+  accent: semanticColor('accent', '#6C8DAB', '#82C3F1'),
+  accentLight: semanticColor('accent-light', '#CBD9E6', '#B1DCF7'),
+  accentDark: semanticColor('accent-dark', '#2f526f', '#DBEAFE'),
+  accentSoft: semanticColor('accent-soft', '#F6F9FC', '#112A48'),
 
-  cyan: semanticColor('info', '#42B8F5', '#6CCBFF'),
-  purple: semanticColor('purple', '#9A6DFF', '#C3B2FF'),
-  coral: semanticColor('coral', '#FF6678', '#FF96A2'),
-  orange: semanticColor('warning', '#F4B942', '#F4C75D'),
+  cyan: semanticColor('info', '#7FC2F4', '#82C3F1'),
+  purple: semanticColor('purple', '#0282E8', '#B1DCF7'),
+  coral: semanticColor('coral', '#E11D48', '#FB7185'),
+  orange: semanticColor('warning', '#F59E0B', '#E6A44C'),
 
-  navy: semanticColor('navy', '#0A2136', '#061521'),
-  navyDark: semanticColor('navy-dark', '#051420', '#020B13'),
-  navySoft: semanticColor('navy-soft', '#12314A', '#0B2030'),
+  navy: semanticColor('navy', '#04396C', '#0D1625'),
+  navyDark: semanticColor('navy-dark', '#032f5c', '#0D3153'),
+  navySoft: semanticColor('navy-soft', '#01457D', '#121D2D'),
 
-  success: semanticColor('success', '#28C797', '#5BE0B1'),
-  successDark: semanticColor('success-strong', '#169F76', '#89EBC8'),
-  successSoft: semanticColor('success-soft', '#EBFFF8', '#0D352D'),
-  warning: semanticColor('warning', '#F4B942', '#F4C75D'),
-  warningDark: semanticColor('warning-strong', '#D49215', '#FFE19A'),
-  warningSoft: semanticColor('warning-soft', '#FFF8E6', '#3B2B0E'),
-  danger: semanticColor('danger', '#FF6678', '#FF8795'),
-  dangerDark: semanticColor('danger-strong', '#DC3F55', '#FFB2BA'),
-  dangerSoft: semanticColor('danger-soft', '#FFF0F1', '#43202B'),
+  success: semanticColor('success', '#10B981', '#34D399'),
+  successDark: semanticColor('success-strong', '#059669', '#6EE7B7'),
+  successSoft: semanticColor('success-soft', '#ECFDF5', '#073B32'),
+  warning: semanticColor('warning', '#F59E0B', '#E6A44C'),
+  warningDark: semanticColor('warning-strong', '#D97706', '#F8D59D'),
+  warningSoft: semanticColor('warning-soft', '#FFF8EB', '#332719'),
+  danger: semanticColor('danger', '#E11D48', '#FB7185'),
+  dangerDark: semanticColor('danger-strong', '#BE123C', '#FDA4AF'),
+  dangerSoft: semanticColor('danger-soft', '#FFF1F2', '#4C1724'),
 
-  white: semanticColor('surface', '#FFFFFF', '#0B2030', '?android:colorBackground'),
-  background: semanticColor('page', '#F6F4FB', '#04111C', '?android:colorBackground'),
-  backgroundBlue: semanticColor('page-secondary', '#EFEBF6', '#061521', '?android:colorBackground'),
-  surface: semanticColor('surface', '#FFFFFF', '#0B2030', '?android:colorBackgroundFloating'),
-  surfaceSoft: semanticColor('surface-subtle', '#FBF9FE', '#0E2435', '?android:colorBackgroundFloating'),
-  surfaceMuted: semanticColor('surface-strong', '#F1EDF8', '#183346', '?android:colorBackgroundFloating'),
-  border: semanticColor('border', '#DED7EB', '#1B3A4E', '?android:colorControlNormal'),
-  muted: semanticColor('text-muted', '#746986', '#94A9BC', '?android:textColorSecondary'),
-  text: semanticColor('text', '#171124', '#F8FBFF', '?android:textColorPrimary'),
-  textSoft: semanticColor('text-secondary', '#584E6A', '#D1DCE7', '?android:textColorSecondary'),
+  white: semanticColor('surface', '#FFFFFF', '#121D2D', '?android:colorBackground'),
+  background: semanticColor('page', '#F7F9FB', '#0D1625', '?android:colorBackground'),
+  backgroundBlue: semanticColor('page-secondary', '#EEF3F7', '#0D1625', '?android:colorBackground'),
+  surface: semanticColor('surface', '#FFFFFF', '#121D2D', '?android:colorBackgroundFloating'),
+  surfaceSoft: semanticColor('surface-subtle', '#F9FBFD', '#0F1928', '?android:colorBackgroundFloating'),
+  surfaceMuted: semanticColor('surface-strong', '#EEF3F7', '#1C2A3D', '?android:colorBackgroundFloating'),
+  border: semanticColor('border', '#DDE6EE', '#293B51', '?android:colorControlNormal'),
+  muted: semanticColor('text-muted', '#6b7e8f', '#9EADBC', '?android:textColorSecondary'),
+  text: semanticColor('text', '#0e1d2a', '#F7FAFC', '?android:textColorPrimary'),
+  textSoft: semanticColor('text-secondary', '#4D6173', '#C0CDD9', '?android:textColorSecondary'),
 
-  overlayBlue: semanticColor('glow-blue', 'rgba(124,92,255,0.14)', 'rgba(166,140,255,0.16)'),
-  overlayIndigo: semanticColor('glow-indigo', 'rgba(255,93,143,0.10)', 'rgba(255,119,164,0.11)'),
-  overlayTeal: semanticColor('glow-teal', 'rgba(25,200,173,0.10)', 'rgba(67,225,202,0.09)'),
+  overlayBlue: semanticColor('glow-blue', 'rgba(1,118,212,0.10)', 'rgba(96,165,250,0.12)'),
+  overlayIndigo: semanticColor('glow-indigo', 'rgba(245,158,11,0.07)', 'rgba(251,146,60,0.08)'),
+  overlayTeal: semanticColor('glow-teal', 'rgba(2,130,232,0.06)', 'rgba(147,197,253,0.07)'),
 }
 
 export const gradients = {
-  primary: ['#7C5CFF', '#9A6DFF', '#FF5D8F'] as const,
-  aurora: ['#051420', '#0A2136', '#25164A'] as const,
-  hero: ['#020B13', '#071A2B', '#25164A'] as const,
-  soft: ['#F3EFFF', '#FFF0F5', '#EAFFF9'] as const,
-  success: ['#19C8AD', '#28C797'] as const,
+  primary: ['#0282E8', '#0176D4', '#02579B'] as const,
+  aurora: ['#0282E8', '#0176D4', '#02579B'] as const,
+  hero: ['#0282E8', '#0176D4', '#02579B'] as const,
+  soft: ['#EEF7FF', '#F7F9FB', '#FFF8EB'] as const,
+  success: ['#10B981', '#059669'] as const,
 }
 
 export const spacing = {
@@ -117,9 +117,9 @@ export const radius = {
 }
 
 export const shadow: ViewStyle = Platform.select<ViewStyle>({
-  web: { boxShadow: '0 14px 34px rgba(65, 42, 110, 0.14)' },
+  web: { boxShadow: '0 14px 34px rgba(1, 69, 125, 0.11)' },
   default: {
-    shadowColor: '#4A2D7A',
+    shadowColor: '#01457D',
     shadowOffset: { width: 0, height: 11 },
     shadowOpacity: 0.14,
     shadowRadius: 23,
@@ -128,9 +128,9 @@ export const shadow: ViewStyle = Platform.select<ViewStyle>({
 }) ?? {}
 
 export const softShadow: ViewStyle = Platform.select<ViewStyle>({
-  web: { boxShadow: '0 9px 24px rgba(33, 20, 59, 0.09)' },
+  web: { boxShadow: '0 9px 24px rgba(1, 69, 125, 0.07)' },
   default: {
-    shadowColor: '#4A2D7A',
+    shadowColor: '#01457D',
     shadowOffset: { width: 0, height: 7 },
     shadowOpacity: 0.09,
     shadowRadius: 17,
@@ -139,9 +139,9 @@ export const softShadow: ViewStyle = Platform.select<ViewStyle>({
 }) ?? {}
 
 export const floatingShadow: ViewStyle = Platform.select<ViewStyle>({
-  web: { boxShadow: '0 20px 48px rgba(124, 92, 255, 0.28)' },
+  web: { boxShadow: '0 20px 48px rgba(1, 118, 212, 0.20)' },
   default: {
-    shadowColor: '#7C5CFF',
+    shadowColor: '#0176D4',
     shadowOffset: { width: 0, height: 16 },
     shadowOpacity: 0.26,
     shadowRadius: 30,

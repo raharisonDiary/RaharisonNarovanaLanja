@@ -12,6 +12,7 @@ import SelectField from '../../src/components/SelectField'
 import { tr } from '../../src/i18n/text'
 import { goBackOrReplace } from '../../src/navigation/goBackOrReplace'
 import { enqueueBundle, getQueueItem } from '../../src/storage/database'
+import { getCachedReferenceData, saveReferenceData } from '../../src/storage/referenceCache'
 import { colors, floatingShadow, radius, shadow, softShadow, spacing } from '../../src/styles/theme'
 import type { AdministrativeAreaDto, CampaignDto, CensusBundle, CitizenDraft, MaritalStatus, PersonSex, RelationshipToHead } from '../../src/types/api'
 import { usePreferences } from '../../src/preferences/PreferencesContext'
@@ -54,10 +55,52 @@ export default function NewHouseholdScreen() {
   const [unknownAdult, setUnknownAdult] = useState(false)
 
   useEffect(() => {
-    void Promise.all([mobileApi.campaigns(), mobileApi.areas()]).then(async ([campaignRows, areaRows]) => {
-      setCampaigns(campaignRows); setAreas(areaRows)
-      setCampaignId(campaignRows.find((item) => item.status === 'Active')?.id ?? campaignRows[0]?.id ?? '')
-      setCountryId(areaRows.find((item) => item.type === 'Country' && item.name.toLowerCase().includes('madagas'))?.id ?? areaRows.find((item) => item.type === 'Country')?.id ?? '')
+    const initialise = async () => {
+      let campaignRows: CampaignDto[] = []
+      let areaRows: AdministrativeAreaDto[] = []
+
+      try {
+        ;[campaignRows, areaRows] = await Promise.all([
+          mobileApi.campaigns(),
+          mobileApi.areas(),
+        ])
+
+        // Store only reference data required to start/complete a census form.
+        // No business record is changed here.
+        await saveReferenceData(campaignRows, areaRows)
+      } catch {
+        const cached = await getCachedReferenceData()
+        campaignRows = cached.campaigns
+        areaRows = cached.areas
+
+        if (!campaignRows.length || !areaRows.length) {
+          setError(tr(
+            language,
+            'Les campagnes et territoires ne sont pas encore disponibles hors connexion. Connectez-vous une fois, ouvrez Nouvelle collecte, puis vous pourrez travailler sans Internet.',
+            'Mbola tsy voatahiry ho an’ny mode hors ligne ny campagne sy territoire. Mifandraisa amin’ny Internet indray mandeha ary sokafy Nouvelle collecte aloha.',
+            'Campaigns and territories are not cached yet. Connect once and open New census before working offline.',
+          ))
+          return
+        }
+      }
+
+      setCampaigns(campaignRows)
+      setAreas(areaRows)
+      setCampaignId(
+        campaignRows.find((item) => item.status === 'Active')?.id
+          ?? campaignRows[0]?.id
+          ?? '',
+      )
+      setCountryId(
+        areaRows.find(
+          (item) =>
+            item.type === 'Country'
+            && item.name.toLowerCase().includes('madagas'),
+        )?.id
+          ?? areaRows.find((item) => item.type === 'Country')?.id
+          ?? '',
+      )
+
       if (editId) {
         const existing = await getQueueItem(editId)
         if (existing) {
@@ -67,8 +110,10 @@ export default function NewHouseholdScreen() {
           setHouseholdCode(bundle.household.referenceCode); setHouseholdType(bundle.household.householdType); setHeadFullName(bundle.household.headFullName); setPhone(bundle.household.phoneNumber); setPersons(bundle.persons); setCitizen(emptyCitizen(bundle.persons.length + 1)); if (startCitizen === 'true') setStep(3)
         }
       }
-    }).catch((exception) => setError(messageFromError(exception)))
-  }, [editId, startCitizen])
+    }
+
+    void initialise()
+  }, [editId, startCitizen, language])
 
   useEffect(() => {
     contentOpacity.setValue(0)

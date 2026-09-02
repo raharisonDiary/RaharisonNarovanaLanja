@@ -17,7 +17,6 @@ import {
 import { useEffect, useState } from 'react'
 import {
   type ColorValue,
-  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -150,7 +149,7 @@ export default function PublicLanding() {
             </View>
           </View>
           <View style={styles.landscape}>
-            <Trees color="#A7F3D0" size={58} />
+            <Trees color="#D1FAE5" size={58} />
             <View style={styles.enumerator}>
               <View style={styles.enumeratorHead} />
               <View style={styles.enumeratorBody}>
@@ -175,22 +174,6 @@ export default function PublicLanding() {
           <Text style={styles.title}>{t('publicTitle')}</Text>
           <Text style={styles.text}>{t('publicText')}</Text>
         </View>
-
-        <AuroraCard style={styles.showcaseCard}>
-          <Image
-            source={require('../assets/census-flow-showcase.jpg')}
-            resizeMode="cover"
-            style={styles.showcaseImage}
-            accessibilityLabel="Aperçu responsive de Census Flow"
-          />
-          <View style={styles.showcaseCaption}>
-            <View>
-              <Text style={styles.showcaseEyebrow}>UNE SEULE PLATEFORME</Text>
-              <Text style={styles.showcaseTitle}>Du terrain à la décision</Text>
-            </View>
-            <View style={styles.showcaseDot} />
-          </View>
-        </AuroraCard>
 
         <AuroraCard style={styles.progressCard}>
           <View style={styles.progressTop}>
@@ -505,7 +488,7 @@ const styles = StyleSheet.create({
     width: 23,
     height: 23,
     borderRadius: 999,
-    backgroundColor: '#F8D5B5',
+    backgroundColor: '#FBD38D',
   },
   enumeratorBody: {
     width: 44,
@@ -679,7 +662,7 @@ const styles = StyleSheet.create({
   },
   calloutCopy: { flex: 1 },
   calloutTitle: { color: '#FFFFFF', fontSize: 16, fontWeight: '900' },
-  calloutText: { color: '#E0E7FF', fontSize: 10, lineHeight: 16, marginTop: 4 },
+  calloutText: { color: '#D9EDFF', fontSize: 10, lineHeight: 16, marginTop: 4 },
   cta: {
     minHeight: 64,
     marginTop: spacing.lg,
@@ -692,7 +675,7 @@ const styles = StyleSheet.create({
     ...floatingShadow,
   },
   ctaPressed: { transform: [{ scale: 0.988 }], opacity: 0.94 },
-  ctaLabel: { color: '#F3EFFF', fontSize: 8, fontWeight: '900', letterSpacing: 1.1 },
+  ctaLabel: { color: '#D9EDFF', fontSize: 8, fontWeight: '900', letterSpacing: 1.1 },
   ctaText: { color: "#FFFFFF", fontSize: 16, fontWeight: '900', marginTop: 2 },
   ctaArrow: {
     width: 40,
@@ -722,19 +705,5 @@ const styles = StyleSheet.create({
   },
   featureTitle: { fontWeight: '900', color: colors.text },
   featureText: { fontSize: 11, lineHeight: 17, color: colors.muted, marginTop: 4 },
-  showcaseCard: { padding: 6, borderRadius: radius.xl },
-  showcaseImage: { width: '100%', aspectRatio: 16 / 9, borderRadius: radius.lg },
-  showcaseCaption: {
-    minHeight: 64,
-    paddingHorizontal: 12,
-    paddingTop: 11,
-    paddingBottom: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  showcaseEyebrow: { color: colors.primary, fontSize: 8, fontWeight: '900', letterSpacing: 1.1 },
-  showcaseTitle: { color: colors.text, fontSize: 15, fontWeight: '900', marginTop: 3 },
-  showcaseDot: { width: 12, height: 12, borderRadius: 999, backgroundColor: colors.accent },
   footer: { marginTop: 26, textAlign: 'center', fontSize: 10, color: colors.muted },
 })

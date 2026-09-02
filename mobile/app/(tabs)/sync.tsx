@@ -28,6 +28,11 @@ import PrimaryButton from '../../src/components/PrimaryButton'
 import ScreenHeader from '../../src/components/ScreenHeader'
 import { usePreferences } from '../../src/preferences/PreferencesContext'
 import { getQueue, markPending, type QueueItem } from '../../src/storage/database'
+import {
+  getPersonQueue,
+  markPersonPending,
+  type PendingPersonItem,
+} from '../../src/storage/personQueue'
 import { syncPending } from '../../src/sync/syncService'
 import {
   colors,
@@ -40,13 +45,23 @@ import {
 export default function SyncScreen() {
   const { t } = usePreferences()
   const [items, setItems] = useState<QueueItem[]>([])
+  const [personItems, setPersonItems] = useState<PendingPersonItem[]>([])
   const [online, setOnline] = useState<boolean | null>(null)
   const [syncing, setSyncing] = useState(false)
   const [progress, setProgress] = useState(0)
 
   const load = useCallback(async () => {
-    setItems(await getQueue())
-    setOnline((await NetInfo.fetch()).isConnected)
+    const [bundleRows, personRows, network] = await Promise.all([
+      getQueue(),
+      getPersonQueue(),
+      NetInfo.fetch(),
+    ])
+    setItems(bundleRows)
+    setPersonItems(personRows)
+    setOnline(Boolean(
+      network.isConnected
+      && network.isInternetReachable !== false,
+    ))
   }, [])
 
   useFocusEffect(
@@ -61,6 +76,9 @@ export default function SyncScreen() {
     for (const item of items) {
       if (item.status === 'failed') await markPending(item.id)
     }
+    for (const item of personItems) {
+      if (item.status === 'failed') await markPersonPending(item.id)
+    }
     try {
       const result = await syncPending((done, total) =>
         setProgress(total ? done / total : 1),
@@ -72,8 +90,13 @@ export default function SyncScreen() {
     }
   }
 
-  const failed = items.filter((item) => item.status === 'failed').length
-  const citizens = items.reduce((sum, item) => sum + item.payload.persons.length, 0)
+  const pendingTotal = items.length + personItems.length
+  const failed =
+    items.filter((item) => item.status === 'failed').length
+    + personItems.filter((item) => item.status === 'failed').length
+  const citizens =
+    items.reduce((sum, item) => sum + item.payload.persons.length, 0)
+    + personItems.length
 
   return (
     <AuroraBackground>
@@ -94,9 +117,9 @@ export default function SyncScreen() {
         >
           <View style={styles.networkPill}>
             {online ? (
-              <Wifi color="#5EEAD4" size={15} />
+              <Wifi color="#10B981" size={15} />
             ) : (
-              <WifiOff color="#FDE68A" size={15} />
+              <WifiOff color="#FBD38D" size={15} />
             )}
             <Text style={styles.networkPillText}>
               {online ? 'Connecté' : 'Mode hors ligne'}
@@ -112,7 +135,7 @@ export default function SyncScreen() {
           <Text style={styles.cloudTitle}>
             {syncing
               ? t('sendingData')
-              : items.length
+              : pendingTotal
                 ? t('localReady')
                 : t('allSynced')}
           </Text>
@@ -128,7 +151,7 @@ export default function SyncScreen() {
             </View>
           ) : null}
           <Text style={styles.progressLabel}>
-            {syncing ? `${Math.round(progress * 100)}%` : `${items.length} élément(s) local(aux)`}
+            {syncing ? `${Math.round(progress * 100)}%` : `${pendingTotal} élément(s) local(aux)`}
           </Text>
         </GradientSurface>
 
@@ -157,18 +180,18 @@ export default function SyncScreen() {
         </View>
 
         <PrimaryButton
-          title={items.length ? t('syncNow') : t('refresh')}
+          title={pendingTotal ? t('syncNow') : t('refresh')}
           icon={items.length ? RefreshCw : CheckCircle2}
           loading={syncing}
           disabled={!online}
-          onPress={() => void (items.length ? start() : load())}
+          onPress={() => void (pendingTotal ? start() : load())}
         />
 
-        {items.length > 0 ? (
+        {pendingTotal > 0 ? (
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Données en attente</Text>
             <View style={styles.countPill}>
-              <Text style={styles.countPillText}>{items.length}</Text>
+              <Text style={styles.countPillText}>{pendingTotal}</Text>
             </View>
           </View>
         ) : null}
@@ -202,6 +225,42 @@ export default function SyncScreen() {
               <Text style={styles.itemText}>
                 {item.payload.persons.length} {t('citizenCount')} · {item.status} ·{' '}
                 {new Date(item.createdAt).toLocaleString('fr-FR')}
+              </Text>
+              {item.lastError ? (
+                <Text style={styles.itemError}>{item.lastError}</Text>
+              ) : null}
+            </View>
+          </AuroraCard>
+        ))}
+
+        {personItems.map((item) => (
+          <AuroraCard key={item.id} style={styles.item}>
+            <View
+              style={[
+                styles.itemIcon,
+                {
+                  backgroundColor:
+                    item.status === 'failed'
+                      ? colors.dangerSoft
+                      : colors.secondarySoft,
+                },
+              ]}
+            >
+              {item.status === 'failed' ? (
+                <AlertCircle color={colors.danger} size={20} />
+              ) : (
+                <UsersRound color={colors.secondary} size={20} />
+              )}
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.itemTitle}>
+                {item.displayName || 'Citoyen hors connexion'}
+              </Text>
+              <Text style={styles.itemLocation}>
+                Citoyen enregistré localement
+              </Text>
+              <Text style={styles.itemText}>
+                {item.status} · {new Date(item.createdAt).toLocaleString('fr-FR')}
               </Text>
               {item.lastError ? (
                 <Text style={styles.itemError}>{item.lastError}</Text>
@@ -284,7 +343,7 @@ const styles = StyleSheet.create({
   cloudText: {
     fontSize: 10,
     lineHeight: 16,
-    color: '#E0E7FF',
+    color: '#D9EDFF',
     marginTop: 6,
     textAlign: 'center',
   },
@@ -296,7 +355,7 @@ const styles = StyleSheet.create({
     marginTop: 18,
     overflow: 'hidden',
   },
-  fill: { height: '100%', backgroundColor: '#5EEAD4', borderRadius: 999 },
+  fill: { height: '100%', backgroundColor: '#10B981', borderRadius: 999 },
   progressLabel: { color: colors.primaryMist, fontSize: 9, fontWeight: '800', marginTop: 7 },
   stats: { flexDirection: 'row', gap: 8 },
   stat: {

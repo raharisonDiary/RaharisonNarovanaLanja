@@ -445,7 +445,7 @@ function SidebarBody({
             pressed && { opacity: 0.76 },
           ]}
         >
-          <LogOut color="#FF9AA3" size={18} />
+          <LogOut color="#FDA4AF" size={18} />
           <Text style={styles.logoutText}>Se déconnecter</Text>
         </Pressable>
       </ScrollView>
@@ -463,7 +463,7 @@ export default function CensusSidebarShell({
   const [open, setOpen] = useState(false)
   const { palette, isDark } = useCensusTheme()
   const { setTheme } = usePreferences()
-  const desktop = width >= 980
+  const desktop = Platform.OS !== 'web' && width >= 1100
   const shellSegments = useSegments() as unknown as string[]
   const shellRouteKey = getRouteKey(shellSegments)
   const routeOpacity = useRef(new Animated.Value(1)).current
@@ -598,9 +598,14 @@ export default function CensusSidebarShell({
 
 const styles = StyleSheet.create({
   shell: { flex: 1, flexDirection: 'row' },
-  desktopSidebar: { width: 292, flexShrink: 0 },
+  desktopSidebar: { width: 272, flexShrink: 0 },
   main: { flex: 1, minWidth: 0 },
-  content: { flex: 1 },
+  content: {
+    flex: 1,
+    width: '100%',
+    maxWidth: Platform.OS === 'web' ? 1440 : undefined,
+    alignSelf: Platform.OS === 'web' ? 'center' : undefined,
+  },
   sidebar: {
     flex: 1,
     borderRightWidth: 1,
@@ -710,7 +715,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   languageButton: { paddingHorizontal: 9, paddingVertical: 6, borderRadius: 9 },
-  languageButtonActive: { backgroundColor: 'rgba(124,92,255,0.20)' },
+  languageButtonActive: { backgroundColor: 'rgba(255,255,255,0.10)' },
   languageText: { fontSize: 10, fontWeight: '900' },
   logout: {
     minHeight: 46,
@@ -722,7 +727,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
   },
-  logoutText: { color: '#FF9AA3', fontSize: 12, fontWeight: '900' },
+  logoutText: { color: '#FDA4AF', fontSize: 12, fontWeight: '900' },
   mobileTopbar: {
     minHeight: 66,
     borderBottomWidth: 1,
@@ -738,14 +743,14 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#7C5CFF',
+    backgroundColor: 'rgba(255,255,255,0.10)',
     borderWidth: 1,
-    borderColor: '#A68CFF',
+    borderColor: 'rgba(255,255,255,0.16)',
   },
   mobileTitleWrap: { flex: 1 },
   mobileTitle: { color: '#FFFFFF', fontSize: 15, fontWeight: '900' },
   mobileSubtitle: {
-    color: '#9FB0C8',
+    color: '#C9D6E3',
     fontSize: 10,
     marginTop: 2,
     fontWeight: '700',
@@ -756,7 +761,7 @@ const styles = StyleSheet.create({
     borderRadius: 13,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.10)',
-    backgroundColor: 'rgba(124,92,255,0.13)',
+    backgroundColor: 'rgba(255,255,255,0.08)',
     alignItems: 'center',
     justifyContent: 'center',
   },

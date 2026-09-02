@@ -110,7 +110,7 @@ export default function HomeScreen() {
         <View style={styles.headerRow}>
           <ScreenHeader
             eyebrow="Tableau de bord"
-            title={`Bonjour, ${user?.firstName ?? 'Agent'} 👋`}
+            title={`Bonjour, ${user?.firstName ?? 'Agent'} `}
             subtitle={user?.role ?? 'Agent recenseur'}
           />
           <View style={styles.headerActions}>
@@ -430,9 +430,9 @@ const styles = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 999,
-    backgroundColor: '#5EEAD4',
+    backgroundColor: '#10B981',
   },
-  campaignStatusText: { color: '#07111F', fontSize: 9, fontWeight: '900' },
+  campaignStatusText: { color: '#032F5C', fontSize: 9, fontWeight: '900' },
   campaignEyebrow: {
     color: colors.primaryMist,
     fontSize: 9,
@@ -479,7 +479,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     overflow: 'hidden',
   },
-  progressFill: { height: '100%', borderRadius: 999, backgroundColor: '#5EEAD4' },
+  progressFill: { height: '100%', borderRadius: 999, backgroundColor: '#10B981' },
   campaignFooter: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -487,7 +487,7 @@ const styles = StyleSheet.create({
     gap: 10,
     marginTop: 14,
   },
-  campaignHint: { flex: 1, color: '#E0E7FF', fontSize: 10, lineHeight: 15 },
+  campaignHint: { flex: 1, color: '#D9EDFF', fontSize: 10, lineHeight: 15 },
   syncRow: { flexDirection: 'row', gap: 10 },
   syncCard: {
     flex: 1,

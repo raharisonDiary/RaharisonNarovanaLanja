@@ -124,7 +124,7 @@ export default function ProfileScreen() {
               <Text style={styles.name}>{user?.fullName || `${firstName} ${lastName}`.trim() || 'Utilisateur'}</Text>
               <Text style={styles.heroEmail}>{user?.email}</Text>
               <View style={styles.role}>
-                <ShieldCheck color="#8FF0DF" size={16} />
+                <ShieldCheck color="#93C5FD" size={16} />
                 <Text style={styles.roleText}>{user?.role ?? 'Census Flow'}</Text>
               </View>
             </View>
@@ -239,9 +239,9 @@ const styles = StyleSheet.create({
   camera: { position: 'absolute', right: -7, bottom: -6, width: 38, height: 38, borderRadius: 13, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: '#FFFFFF' },
   profileCopy: { alignItems: 'center' },
   profileCopyWide: { alignItems: 'flex-start' },
-  heroEyebrow: { color: '#9DD9FF', fontSize: 9, fontWeight: '900', letterSpacing: 1.5 },
+  heroEyebrow: { color: '#B8DDFB', fontSize: 9, fontWeight: '900', letterSpacing: 1.5 },
   name: { fontSize: 24, lineHeight: 30, fontWeight: '900', color: '#FFFFFF', marginTop: 5, textAlign: 'center' },
-  heroEmail: { fontSize: 12, color: '#DCE8FF', marginTop: 4 },
+  heroEmail: { fontSize: 12, color: '#D9EDFF', marginTop: 4 },
   role: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 11, borderRadius: radius.pill, backgroundColor: 'rgba(4,14,35,0.30)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.18)', paddingHorizontal: 11, paddingVertical: 7 },
   roleText: { color: '#FFFFFF', fontSize: 10, fontWeight: '900' },
   grid: { gap: spacing.lg },

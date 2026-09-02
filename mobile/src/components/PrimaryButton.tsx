@@ -87,8 +87,8 @@ export default function PrimaryButton({
               <Defs>
                 <LinearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
                   <Stop offset="0%" stopColor={palette.primary} />
-                  <Stop offset="58%" stopColor={palette.primaryHover} />
-                  <Stop offset="100%" stopColor={palette.secondary} />
+                  <Stop offset="58%" stopColor={palette.primary} />
+                  <Stop offset="100%" stopColor={palette.primaryHover} />
                 </LinearGradient>
               </Defs>
               <Rect width="100%" height="100%" rx={radius.md} fill={`url(#${gradientId})`} />

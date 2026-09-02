@@ -36,6 +36,6 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
   text: { flex: 1 },
   eyebrow: { fontSize: 10, fontWeight: '900', letterSpacing: 1.25, textTransform: 'uppercase', marginBottom: 5 },
-  title: { fontSize: 26, lineHeight: 32, fontWeight: '900', letterSpacing: -0.7 },
+  title: { fontSize: 27, lineHeight: 33, fontWeight: '900', letterSpacing: -0.9 },
   subtitle: { fontSize: 13, marginTop: 5, lineHeight: 19 },
 })

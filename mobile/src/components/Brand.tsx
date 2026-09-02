@@ -37,7 +37,7 @@ export default function Brand({ compact = false, inverse = false }: { compact?: 
       {!compact ? (
         <View>
           <Text style={[styles.title, { color: inverse ? '#FFFFFF' : palette.text }]}>Census Flow</Text>
-          <Text style={[styles.subtitle, { color: inverse ? '#C9D5E6' : palette.textMuted }]}>Compter · Comprendre · Planifier</Text>
+          <Text style={[styles.subtitle, { color: inverse ? '#C9D6E3' : palette.textMuted }]}>Compter · Comprendre · Planifier</Text>
         </View>
       ) : null}
     </View>

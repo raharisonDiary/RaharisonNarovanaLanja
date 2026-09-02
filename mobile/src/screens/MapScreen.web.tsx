@@ -306,8 +306,8 @@ export default function MapScreen() {
           >
             <Path
               d={WORLD_PATH}
-              fill="#BCD8C7"
-              stroke="#6E9980"
+              fill="#D9EDFF"
+              stroke="#3B82F6"
               strokeWidth={0.35}
             />
           </Svg>
@@ -320,8 +320,8 @@ export default function MapScreen() {
           >
             <Path
               d={MADAGASCAR_PATH}
-              fill="#CBE2D3"
-              stroke="#2563EB"
+              fill="#ECFDF9"
+              stroke="#0F9F8C"
               strokeWidth={2.2}
             />
 
@@ -332,10 +332,10 @@ export default function MapScreen() {
                 const progress = progressByRegion.get(name)
                 const status = regionStatus(name)
                 const fill = status === 'done'
-                  ? '#22C55E'
+                  ? '#10B981'
                   : status === 'running'
-                    ? '#2563EB'
-                    : '#7A897F'
+                    ? '#0F9F8C'
+                    : '#687C86'
 
                 return (
                   <G key={name}>
@@ -381,8 +381,8 @@ export default function MapScreen() {
                     r={2.2}
                     fill={
                       dwelling.recordStatus === 'Validated'
-                        ? '#F0B85A'
-                        : '#EF4444'
+                        ? '#F59E0B'
+                        : '#E11D48'
                     }
                     stroke="#FFFFFF"
                     strokeWidth={0.8}
@@ -412,9 +412,9 @@ export default function MapScreen() {
 
       {country && campaignId ? (
         <View style={styles.legend}>
-          <Legend color="#7A897F" label={t('notStarted')} />
-          <Legend color="#2563EB" label={t('inProgress')} />
-          <Legend color="#22C55E" label={t('completed')} />
+          <Legend color="#687C86" label={t('notStarted')} />
+          <Legend color="#0F9F8C" label={t('inProgress')} />
+          <Legend color="#10B981" label={t('completed')} />
         </View>
       ) : null}
 
@@ -514,7 +514,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: radius.xl,
-    backgroundColor: '#EAF4EE',
+    backgroundColor: '#ECFDF9',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 10,

@@ -1,4 +1,4 @@
-import { Stack, useRouter } from 'expo-router'
+﻿import { Stack, useRouter } from 'expo-router'
 import { ArrowLeft, CalendarClock, Plus, Search } from 'lucide-react-native'
 import { useEffect, useMemo, useState } from 'react'
 import {
@@ -115,7 +115,7 @@ export default function CampaignsScreen() {
         ? districtId
         : communeId
   const areaName = (id: string) =>
-    areas.find((item) => item.id === id)?.name ?? '—'
+    areas.find((item) => item.id === id)?.name ?? 'â€”'
   const filtered = useMemo(
     () => campaigns.filter((item) =>
       `${item.name} ${item.code} ${areaName(item.scopeAdministrativeAreaId)}`
@@ -143,7 +143,7 @@ export default function CampaignsScreen() {
     if (!name.trim() || !startDate || !endDate || !scopeId) {
       setError(tr(
         language,
-        'Complétez tous les champs obligatoires.',
+        'ComplÃ©tez tous les champs obligatoires.',
         'Fenoy ireo saha ilaina.',
         'Complete all required fields.',
       ))
@@ -152,8 +152,8 @@ export default function CampaignsScreen() {
     if (endDate < startDate) {
       setError(tr(
         language,
-        'La date de fin doit suivre la date de début.',
-        'Ny daty fiafarana dia tsy maintsy aorian’ny fanombohana.',
+        'La date de fin doit suivre la date de dÃ©but.',
+        'Ny daty fiafarana dia tsy maintsy aorianâ€™ny fanombohana.',
         'The end date must follow the start date.',
       ))
       return
@@ -218,7 +218,7 @@ export default function CampaignsScreen() {
           <Text style={styles.subtitle}>
             {tr(
               language,
-              'Créer, programmer et suivre les campagnes.',
+              'CrÃ©er, programmer et suivre les campagnes.',
               'Mamorona sy manara-maso fanisana.',
               'Create, schedule and monitor campaigns.',
             )}
@@ -238,9 +238,9 @@ export default function CampaignsScreen() {
           onChangeText={setSearch}
           placeholder={tr(
             language,
-            'Rechercher une campagne…',
-            'Hikaroka fanisana…',
-            'Search campaigns…',
+            'Rechercher une campagneâ€¦',
+            'Hikaroka fanisanaâ€¦',
+            'Search campaignsâ€¦',
           )}
           placeholderTextColor={colors.muted}
           style={styles.searchInput}
@@ -264,10 +264,10 @@ export default function CampaignsScreen() {
                   <View style={{ flex: 1 }}>
                     <Text style={styles.cardTitle}>{item.name}</Text>
                     <Text style={styles.meta}>
-                      {item.code} · {areaName(item.scopeAdministrativeAreaId)}
+                      {item.code} Â· {areaName(item.scopeAdministrativeAreaId)}
                     </Text>
                     <Text style={styles.meta}>
-                      {item.startDate} — {item.endDate}
+                      {item.startDate} â€” {item.endDate}
                     </Text>
                   </View>
                   <StatusPill value={item.status} />
@@ -315,7 +315,7 @@ export default function CampaignsScreen() {
             </Text>
           </View>
           <FormField
-            label={tr(language, 'Nom de la campagne', 'Anaran’ny fanisana', 'Campaign name')}
+            label={tr(language, 'Nom de la campagne', 'Anaranâ€™ny fanisana', 'Campaign name')}
             value={name}
             onChangeText={setName}
           />
@@ -326,7 +326,7 @@ export default function CampaignsScreen() {
             autoCapitalize="characters"
           />
           <FormField
-            label={tr(language, 'Date de début (AAAA-MM-JJ)', 'Daty fanombohana', 'Start date (YYYY-MM-DD)')}
+            label={tr(language, 'Date de dÃ©but (AAAA-MM-JJ)', 'Daty fanombohana', 'Start date (YYYY-MM-DD)')}
             value={startDate}
             onChangeText={setStartDate}
             placeholder="2026-08-10"
@@ -338,7 +338,7 @@ export default function CampaignsScreen() {
             placeholder="2026-09-10"
           />
           <SelectField
-            label={tr(language, 'Portée', 'Faritra iasana', 'Scope')}
+            label={tr(language, 'PortÃ©e', 'Faritra iasana', 'Scope')}
             value={scopeType}
             onChange={(value) => {
               setScopeType(value as typeof scopeType)
@@ -348,7 +348,7 @@ export default function CampaignsScreen() {
             }}
             options={[
               { label: tr(language, 'Tout le pays', 'Firenena manontolo', 'Whole country'), value: 'Country' },
-              { label: tr(language, 'Une région', 'Faritra iray', 'One region'), value: 'Region' },
+              { label: tr(language, 'Une rÃ©gion', 'Faritra iray', 'One region'), value: 'Region' },
               { label: tr(language, 'Un district', 'Distrika iray', 'One district'), value: 'District' },
               { label: tr(language, 'Une commune', 'Kaominina iray', 'One commune'), value: 'Commune' },
             ]}
@@ -366,7 +366,7 @@ export default function CampaignsScreen() {
           />
           {scopeType !== 'Country' ? (
             <SelectField
-              label={tr(language, 'Région', 'Faritra', 'Region')}
+              label={tr(language, 'RÃ©gion', 'Faritra', 'Region')}
               value={regionId}
               onChange={(value) => {
                 setRegionId(value)
@@ -400,8 +400,8 @@ export default function CampaignsScreen() {
             value={launchMode}
             onChange={(value) => setLaunchMode(value as typeof launchMode)}
             options={[
-              { label: tr(language, 'Démarrer immédiatement', 'Hanomboka avy hatrany', 'Start immediately'), value: 'Active' },
-              { label: tr(language, 'Programmer selon les dates', 'Handamina amin’ny daty', 'Schedule by dates'), value: 'Scheduled' },
+              { label: tr(language, 'DÃ©marrer immÃ©diatement', 'Hanomboka avy hatrany', 'Start immediately'), value: 'Active' },
+              { label: tr(language, 'Programmer selon les dates', 'Handamina aminâ€™ny daty', 'Schedule by dates'), value: 'Scheduled' },
               { label: tr(language, 'Laisser en attente', 'Avela hiandry', 'Keep pending'), value: 'Draft' },
             ]}
           />
@@ -413,7 +413,7 @@ export default function CampaignsScreen() {
           />
           {error ? <Text style={styles.error}>{error}</Text> : null}
           <PrimaryButton
-            title={tr(language, 'Créer la campagne', 'Hamorona fanisana', 'Create campaign')}
+            title={tr(language, 'CrÃ©er la campagne', 'Hamorona fanisana', 'Create campaign')}
             loading={saving}
             onPress={() => void create()}
           />
@@ -425,7 +425,17 @@ export default function CampaignsScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background, padding: spacing.lg },
-  header: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 6, marginBottom: 14 },
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginTop: 6,
+    marginBottom: 4,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
   back: { width: 44, height: 44, borderRadius: 14, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: colors.border },
   add: { width: 44, height: 44, borderRadius: 14, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' },
   title: { color: colors.text, fontSize: 22, fontWeight: '900' },
@@ -441,7 +451,20 @@ const styles = StyleSheet.create({
   statuses: { gap: 7 },
   statusButton: { borderWidth: 1, borderColor: colors.primary, backgroundColor: colors.primarySoft, borderRadius: 999, paddingHorizontal: 10, paddingVertical: 7 },
   statusText: { fontSize: 9, color: colors.primaryDark, fontWeight: '800' },
-  modalScreen: { flex: 1, backgroundColor: colors.background },
-  modalContent: { padding: spacing.lg, gap: 14, paddingBottom: 44 },
+  modalScreen: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  modalContent: {
+    width: '100%',
+    maxWidth: 620,
+    alignSelf: 'center',
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
+    gap: 14,
+    paddingBottom: 48,
+  },
   error: { color: colors.danger, backgroundColor: colors.dangerSoft, padding: 10, borderRadius: 10, marginTop: 10 },
 })
+
+

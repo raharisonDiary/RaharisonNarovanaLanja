@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.6,
   },
   identityText: {
-    color: '#E0E7FF',
+    color: '#D9EDFF',
     fontSize: 10,
     lineHeight: 16,
     marginTop: 5,

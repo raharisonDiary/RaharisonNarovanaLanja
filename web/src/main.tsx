@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+﻿import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import 'leaflet/dist/leaflet.css'
 import './styles/tokens.css'
@@ -8,6 +8,8 @@ import './styles/layout.css'
 import './styles/pages.css'
 import './animations/animations.css'
 import './styles/nebula.css'
+import './styles/professional.css'
+import './styles/safe-polish.css'
 import App from './app/App'
 
 createRoot(document.getElementById('root')!).render(
@@ -15,3 +17,4 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 )
+

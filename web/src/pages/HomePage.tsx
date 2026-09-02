@@ -1,4 +1,4 @@
-import { ArrowRight, BarChart3, CheckCircle2, Globe2, ShieldCheck, Smartphone, WifiOff } from 'lucide-react'
+import { ArrowRight, BarChart3, CheckCircle2, Globe2, ShieldCheck, WifiOff } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { publicApi } from '../api/resources'
 import Brand from '../components/common/Brand'
@@ -26,15 +26,6 @@ export default function HomePage() {
           <p>{t('publicIntro')}</p>
           <div className="public-hero__actions"><Link className="button button--primary button--large" to="/login">{t('getStarted')}<ArrowRight size={18} /></Link><a className="button button--ghost button--large" href="#platform">{t('discover')}</a></div>
           <div className="public-trust"><span><CheckCircle2 size={16} />{t('trustGps')}</span><span><CheckCircle2 size={16} />{t('trustValidation')}</span><span><CheckCircle2 size={16} />{t('trustCentralized')}</span></div>
-        </div>
-        <div className="public-hero__visual">
-          <div className="product-showcase">
-            <img src="/images/census-flow-showcase.webp" alt="Aperçu responsive de Census Flow sur ordinateur et mobile" />
-            <span className="product-showcase__glow product-showcase__glow--one" />
-            <span className="product-showcase__glow product-showcase__glow--two" />
-          </div>
-          <article className="floating-card floating-card--top"><Smartphone size={22} /><div><strong>{t('guidedCollection')}</strong><small>{t('questionByQuestion')}</small></div></article>
-          <article className="floating-card floating-card--bottom"><BarChart3 size={22} /><div><strong>{t('reliableAnalysis')}</strong><small>{t('validatedBeforePublication')}</small></div></article>
         </div>
       </section>
 
