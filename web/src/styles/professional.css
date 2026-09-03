@@ -828,12 +828,17 @@ input:focus, select:focus, textarea:focus {
   .map-control-panel > * { grid-column: 1 !important; }
   .map-card .leaflet-container, .map-card--world .leaflet-container { min-height: 420px !important; height: 52vh !important; }
 
-  .modal-backdrop { align-items: end; padding: 0 !important; }
+  .modal-backdrop {
+    place-items: center !important;
+    padding: 16px !important;
+  }
   .modal {
-    width: 100% !important;
-    max-width: 100% !important;
-    max-height: 94dvh !important;
-    border-radius: 14px 14px 0 0 !important;
+    width: min(680px, calc(100vw - 32px)) !important;
+    max-width: 680px !important;
+    max-height: calc(100dvh - 32px) !important;
+    overflow-y: auto !important;
+    margin: auto !important;
+    border-radius: 14px !important;
   }
   .modal__body { padding: 17px !important; }
   .modal > footer { padding: 14px 17px max(14px, env(safe-area-inset-bottom)); }

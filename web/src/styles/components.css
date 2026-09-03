@@ -180,8 +180,17 @@ body {
   .toolbar, .toolbar--wrap { align-items: stretch; }
   .toolbar--wrap > * { flex: 1 1 100%; min-width: 0; }
   .search-box { width: 100%; }
-  .modal-backdrop { align-items: end; padding: 0; }
-  .modal { width: 100%; max-height: 96dvh; border-radius: 24px 24px 0 0; }
+  .modal-backdrop {
+    place-items: center;
+    padding: 16px;
+  }
+  .modal {
+    width: min(680px, calc(100vw - 32px));
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+    margin: auto;
+    border-radius: 24px;
+  }
   .modal__body { padding: 18px; }
   .citizen-photo-preview { min-height: 260px; }
   .citizen-photo-preview > img { height: min(390px, 50vh); }
