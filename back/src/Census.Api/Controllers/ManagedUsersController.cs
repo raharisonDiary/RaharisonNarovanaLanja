@@ -89,7 +89,6 @@ public sealed class ManagedUsersController(
                 request.AdministrativeAreaId),
             cancellationToken);
 
-        // Un seul clic côté client déclenche automatiquement les deux canaux.
         var deliveryResults = await Task.WhenAll(
             emailNotifier.SendAsync(
                 email,
@@ -121,6 +120,62 @@ public sealed class ManagedUsersController(
             $"/api/v1/users/{created.Id}",
             response);
     }
+
+    [HttpDelete("{id:guid}")]
+[ProducesResponseType(StatusCodes.Status204NoContent)]
+public async Task<IActionResult> DeleteAsync(
+    Guid id,
+    CancellationToken cancellationToken)
+{
+    var actor = await GetActorAsync(cancellationToken);
+
+    var target = await userRepository.GetByIdAsync(
+        id,
+        cancellationToken)
+        ?? throw new EntityNotFoundException(
+            "Le compte à supprimer est introuvable.");
+
+    if (actor.Role == UserRole.SystemAdministrator)
+    {
+        if (target.Role is not (
+            UserRole.RegionalSupervisor or
+            UserRole.Enumerator))
+        {
+            throw new BusinessValidationException(
+                "Ce compte ne peut pas être supprimé ici.");
+        }
+    }
+    else if (
+        actor.Role == UserRole.RegionalSupervisor &&
+        actor.AdministrativeAreaId.HasValue &&
+        target.Role == UserRole.Enumerator &&
+        target.AdministrativeAreaId.HasValue)
+    {
+        var allowed =
+            await areaHierarchyQuery.IsDescendantOrSelfAsync(
+                target.AdministrativeAreaId.Value,
+                actor.AdministrativeAreaId.Value,
+                cancellationToken);
+
+        if (!allowed)
+        {
+            throw new BusinessValidationException(
+                "Cet agent est en dehors de votre région.");
+        }
+    }
+    else
+    {
+        throw new BusinessValidationException(
+            "Vous n'êtes pas autorisé à supprimer ce compte.");
+    }
+
+    await userService.DeleteManagedUserAsync(
+        id,
+        actor.Id,
+        cancellationToken);
+
+    return NoContent();
+}
 
     private async Task<ApplicationUser> GetActorAsync(
         CancellationToken cancellationToken)

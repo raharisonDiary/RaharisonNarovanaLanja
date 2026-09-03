@@ -42,4 +42,10 @@ public interface IApplicationUserService
         Guid id,
         Guid actingUserId,
         CancellationToken cancellationToken);
+
+    Task DeleteManagedUserAsync(
+        Guid id,
+        Guid actingUserId,
+        CancellationToken cancellationToken);
+
 }

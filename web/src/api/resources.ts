@@ -41,8 +41,24 @@ export const usersApi = {
 }
 
 export const managedUsersApi = {
-  list: async (search = '') => (await http.get<UserDto[]>('/managed-users', { params: { search: search || undefined } })).data,
-  create: async (payload: ProvisionUserRequest) => (await http.post<ProvisionedUserResponse>('/managed-users', payload)).data,
+  list: async (search = '') =>
+    (
+      await http.get<UserDto[]>('/managed-users', {
+        params: { search: search || undefined },
+      })
+    ).data,
+
+  create: async (payload: ProvisionUserRequest) =>
+    (
+      await http.post<ProvisionedUserResponse>(
+        '/managed-users',
+        payload,
+      )
+    ).data,
+
+  remove: async (id: string) => {
+    await http.delete(`/managed-users/${id}`)
+  },
 }
 
 export const profileApi = {

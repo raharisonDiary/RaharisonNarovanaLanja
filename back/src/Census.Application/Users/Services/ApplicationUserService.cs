@@ -197,6 +197,37 @@ public sealed class ApplicationUserService(
         return MapToDto(user);
     }
 
+    public async Task DeleteManagedUserAsync(
+    Guid id,
+    Guid actingUserId,
+    CancellationToken cancellationToken)
+{
+    if (id == actingUserId)
+    {
+        throw new ConflictException(
+            "Vous ne pouvez pas supprimer votre propre compte.");
+    }
+
+    var user = await userRepository.GetForUpdateAsync(
+        id,
+        cancellationToken)
+        ?? throw CreateNotFoundException(id);
+
+    var now = timeProvider.GetUtcNow();
+
+    user.Deactivate(now);
+
+    var deletedEmail =
+        $"deleted_{user.Id:N}@deleted.local";
+
+    user.ChangeEmail(
+        deletedEmail,
+        now);
+
+    await userRepository.SaveChangesAsync(
+        cancellationToken);
+}
+
     public async Task ResetPasswordAsync(
         Guid id,
         string newPassword,
