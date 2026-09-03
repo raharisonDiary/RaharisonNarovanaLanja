@@ -1,15 +1,12 @@
-using System.Net.Mail;
-using Census.Infrastructure.Authentication.PasswordRecovery;
-using Microsoft.Extensions.Options;
+using Resend;
 
 namespace Census.Api.Common.Notifications;
 
 public sealed class CredentialEmailNotifier(
-    IOptions<PasswordRecoveryEmailOptions> options,
+    IResend resend,
+    IConfiguration configuration,
     ILogger<CredentialEmailNotifier> logger)
 {
-    private readonly PasswordRecoveryEmailOptions _options = options.Value;
-
     public async Task<string> SendAsync(
         string email,
         string fullName,
@@ -17,34 +14,37 @@ public sealed class CredentialEmailNotifier(
         string temporaryPassword,
         CancellationToken cancellationToken)
     {
-        if (!_options.Enabled)
+        var enabled =
+            configuration.GetValue<bool>("Resend:Enabled");
+
+        if (!enabled)
         {
             logger.LogWarning(
-                "Envoi des identifiants par e-mail non configuré pour {Email}.",
+                "Envoi Resend des identifiants non configuré pour {Email}.",
                 email);
+
             return "NotConfigured";
         }
 
         try
         {
-            using var message = new MailMessage
+            var from =
+                configuration["Resend:FromAddress"]
+                ?? "Census Flow <onboarding@resend.dev>";
+
+            var message = new EmailMessage
             {
-                From = SmtpClientFactory.CreateFromAddress(
-                    _options),
+                From = from,
                 Subject = "Vos identifiants Census Flow",
-                Body = BuildMessage(
+                TextBody = BuildMessage(
                     fullName,
                     loginIdentifier,
-                    temporaryPassword),
-                IsBodyHtml = false
+                    temporaryPassword)
             };
-            message.To.Add(new MailAddress(email));
 
-            using var client = SmtpClientFactory.Create(
-                _options);
+            message.To.Add(email);
 
-            cancellationToken.ThrowIfCancellationRequested();
-            await client.SendMailAsync(
+            await resend.EmailSendAsync(
                 message,
                 cancellationToken);
 
@@ -58,8 +58,9 @@ public sealed class CredentialEmailNotifier(
         {
             logger.LogError(
                 exception,
-                "Échec de l'envoi des identifiants par e-mail à {Email}.",
+                "Échec de l'envoi Resend des identifiants à {Email}.",
                 email);
+
             return "Failed";
         }
     }
