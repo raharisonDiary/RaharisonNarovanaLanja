@@ -1102,3 +1102,10 @@ input:focus, select:focus, textarea:focus {
     border-radius: 14px !important;
   }
 }
+
+/* Masquer la barre de navigation inférieure sur mobile */
+@media (max-width: 820px) {
+  .mobile-bottom-nav {
+    display: none !important;
+  }
+}
