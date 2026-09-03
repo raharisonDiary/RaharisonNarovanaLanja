@@ -6,24 +6,8 @@ using Census.Api.Common.Notifications;
 using Census.Api.Common.Security;
 using Census.Infrastructure;
 using Census.Infrastructure.Bootstrap;
-using Resend;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddOptions();
-
-builder.Services.AddHttpClient<ResendClient>();
-
-builder.Services.Configure<ResendClientOptions>(
-    options =>
-    {
-        options.ApiToken =
-            builder.Configuration["Resend:ApiKey"]
-            ?? throw new InvalidOperationException(
-                "La configuration Resend:ApiKey est absente.");
-    });
-
-builder.Services.AddTransient<IResend, ResendClient>();
 
 builder.Services
     .AddControllers()
@@ -49,7 +33,7 @@ builder.Services.AddHealthChecks();
 
 builder.Services.AddHttpClient<WhatsAppCredentialNotifier>();
 
-builder.Services.AddTransient<CredentialEmailNotifier>();
+builder.Services.AddHttpClient<CredentialEmailNotifier>();
 
 builder.Services.AddHostedService<CampaignLifecycleHostedService>();
 
