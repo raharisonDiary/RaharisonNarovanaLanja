@@ -74,6 +74,9 @@ export default function UsersPage() {
   const [deletingId, setDeletingId] =
     useState<string | null>(null)
 
+  const [userView, setUserView] =
+    useState<'current' | 'deleted'>('current')
+
   const users = useAsync(
     () => managedUsersApi.list(),
     [],
@@ -113,17 +116,45 @@ export default function UsersPage() {
     user?.role,
   ])
 
-  const filtered = useMemo(
+  const currentUsers = useMemo(
+    () =>
+      (users.data ?? []).filter(
+        (item) =>
+          !item.email
+            .toLowerCase()
+            .endsWith("@deleted.local"),
+      ),
+    [users.data],
+  )
+
+  const deletedUsers = useMemo(
     () =>
       (users.data ?? []).filter((item) =>
-        `${item.fullName} ${item.email} ${
-          item.phoneNumber ?? ''
-        }`
+        item.email
           .toLowerCase()
-          .includes(search.toLowerCase()),
+          .endsWith("@deleted.local"),
       ),
-    [search, users.data],
+    [users.data],
   )
+
+  const filtered = useMemo(() => {
+    const source =
+      userView === "deleted"
+        ? deletedUsers
+        : currentUsers
+
+    const query = search.trim().toLowerCase()
+
+    if (!query) return source
+
+    return source.filter((item) =>
+      `${item.fullName} ${item.email} ${
+        item.phoneNumber ?? ""
+      }`
+        .toLowerCase()
+        .includes(query),
+    )
+  }, [search, userView, currentUsers, deletedUsers])
 
   const submit = async (
     event: FormEvent<HTMLFormElement>,
@@ -242,6 +273,43 @@ export default function UsersPage() {
       </section>
 
       <section className="card">
+        <div
+          className="segmented-control"
+          style={{ marginBottom: 16 }}
+        >
+          <button
+            type="button"
+            className={
+              userView === "current"
+                ? "active"
+                : ""
+            }
+            onClick={() => {
+              setUserView("current")
+              setSearch("")
+            }}
+          >
+            Utilisateurs actuels
+            <span>{currentUsers.length}</span>
+          </button>
+
+          <button
+            type="button"
+            className={
+              userView === "deleted"
+                ? "active"
+                : ""
+            }
+            onClick={() => {
+              setUserView("deleted")
+              setSearch("")
+            }}
+          >
+            Utilisateurs supprimés
+            <span>{deletedUsers.length}</span>
+          </button>
+        </div>
+
         <div className="toolbar">
           <label className="search-box">
             <Search size={17} />
@@ -329,42 +397,52 @@ export default function UsersPage() {
               {
                 key: 'actions',
                 title: t('actions'),
-                render: (row) => (
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 8,
-                    }}
-                  >
-                    <button
-                      className="icon-button"
-                      title={
-                        row.isActive
-                          ? 'Désactiver'
-                          : 'Activer'
-                      }
-                      onClick={() =>
-                        void changeStatus(row)
-                      }
+                render: (row) =>
+                  userView === "deleted" ? (
+                    <span
+                      style={{
+                        fontSize: 13,
+                        opacity: 0.7,
+                      }}
                     >
-                      <Power size={17} />
-                    </button>
+                      Archivé
+                    </span>
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                      }}
+                    >
+                      <button
+                        className="icon-button"
+                        title={
+                          row.isActive
+                            ? "Désactiver"
+                            : "Activer"
+                        }
+                        onClick={() =>
+                          void changeStatus(row)
+                        }
+                      >
+                        <Power size={17} />
+                      </button>
 
-                    <button
-                      className="icon-button"
-                      title="Supprimer"
-                      disabled={
-                        deletingId === row.id
-                      }
-                      onClick={() =>
-                        void deleteUser(row)
-                      }
-                    >
-                      <Trash2 size={17} />
-                    </button>
-                  </div>
-                ),
+                      <button
+                        className="icon-button"
+                        title="Supprimer"
+                        disabled={
+                          deletingId === row.id
+                        }
+                        onClick={() =>
+                          void deleteUser(row)
+                        }
+                      >
+                        <Trash2 size={17} />
+                      </button>
+                    </div>
+                  ),
               },
             ]}
           />
