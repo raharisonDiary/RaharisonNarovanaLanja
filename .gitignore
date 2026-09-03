@@ -86,3 +86,7 @@ web/.before-restore-broken/
 mobile/MOBILE_COLOR_ALIGNMENT.md
 web/DESIGN_PLAN.md
 web/RESPONSIVE_VERIFICATION.md
+
+# Exports temporaires de données territoriales
+administrative_areas.sql
+administrative_areas_ordered.csv
